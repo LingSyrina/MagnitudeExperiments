@@ -82,7 +82,7 @@ function GeneratePairMorph({ numStimuli = 10, step = 0.05, min = 0, max = 1, lab
     return Array.from({ length: numStimuli }, (_, j) => {
         const diff = differences[Math.floor(Math.random() * differences.length)];
         const isP1Less = j < numStimuli / 2; // Half have p1 < p2
-        const p = Math.floor(getRandomArbitrary(min / step, max / step - 1)) * step;
+        const p = Math.floor(getRandomArbitrary(min / step, (max - diff) / step)) * step;
         const [p1, p2, Pos] = isP1Less ? [p, p + diff, true] : [p + diff, p, false]; //If isP1Less, p1 < p2, Pos=True.
         const [label, key] = getLabel({labelDict:labelDict, Pos:Pos, radius:[p1, p2]});
         return { radius: [p1, p2], label:label, key:key }; //key is only used for active learning trials
