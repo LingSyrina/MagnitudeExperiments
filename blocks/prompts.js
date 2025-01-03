@@ -116,9 +116,12 @@ var pause = {
 function getpromptTrials() {
   return {
     // block instructions
-    instruct_A:  blockA_instruction,
-    instruct_B:  blockB_instruction,
-    instruct_C:  blockC_instruction,
+    PreSlider_instruction:  PreSlider_instruction,
+    PostSlider_instruction:  PostSlider_instruction,
+    PassLabel_instruction:  PassLabel_instruction,
+    ActLabel_instruction: ActLabel_instruction, 
+    PassDegree_instruction: PassDegree_instruction,
+    ActDegree_instruction: ActDegree_instruction, 
     // welcome and closue
     openning: welcome,
     waiting: waiting,
