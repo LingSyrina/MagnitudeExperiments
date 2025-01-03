@@ -71,7 +71,7 @@ function GenerateSingleMorph({ numStimuli = 20, DegPrecision = 0.2, step = 0.05,
   else {
     while (stimuli.length < numStimuli) {
         const randomValue = Math.floor(getRandomArbitrary(min / step, max / step)) * step;
-        stimuli.push({ radius: parseFloat(randomValue.toFixed(2)), label:getRandomLabel({labelsGlob}), degree: parseFloat(((randomValue-min)/step).toFixed(2)) });
+        stimuli.push({ radius: parseFloat(randomValue.toFixed(2)), label:getRandomLabel({labelsGlob}), degree: parseFloat(((randomValue-min)/step + 1).toFixed(2)) });
   }}
   return stimuli;
 }
