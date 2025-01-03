@@ -1,34 +1,75 @@
 /* * * * * * * * * * * * * * * * * * Instructions * * * * * * * * * *  * * * * */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-var blockA_instruction = {
+var PreSlider_instruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
-    <p> In this section, you will </p>
-    <p>Press the space bar to begin.</p>
+    <p>In this section, you will see a slider. </br> 
+    Each end of the slider will have an item as a reference point. </br> 
+    Your task is to <b>place the pink item</b> along the slider based on the given references.</p>
+    <p>(Press the space bar to begin.)</p>
   `,
   choices: [' '], // restricts to space bar press
   post_trial_gap: 500
 };
 
-var blockB_instruction = {
+var PostSlider_instruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
-    <p> In this section, you will </p>
-    <p>Press the space bar to begin.</p>
+   <p>In this section, you will see one or a pair of items. </br> 
+    Each end of the slider will have an item as a reference point. </br> 
+    Your task is to <b>place the pink item</b> on the slider to answer the question below the image.
+    <p>(Press the space bar to begin.)</p>
   `,
   choices: [' '], // restricts to space bar press
   post_trial_gap: 500
 };
 
-var blockC_instruction = {
+var PassLabel_instruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
-    <p> In this section, you will </p>
-    <p>Press the space bar to begin.</p>
+    <p>In this section, you will see a pair of objects and a description of the relationship between them.</p>
+     <p>Carefully observe the objects and the accompanying line describing the pair.</p>
+     <p>(Press the space bar to begin.)</p>
   `,
   choices: [' '], // restricts to space bar press
   post_trial_gap: 500
 };
+
+var ActLabel_instruction = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+    <p>You will continue see pairs of objects.</p>
+    <p>Your task now is to <b>select the description</b> that best matches the relationship between the objects.</p>
+    <p>You must answer each question correctly to proceed.</p>
+    <p>(Press the space bar to continue.)</p>
+  `,
+  choices: [' '], // restricts to space bar press
+  post_trial_gap: 500
+};
+
+var PassDegree_instruction = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+    <p>In this section, you will see an object along with its measurement description.</p>
+    <p>Observe the object carefully and review the accompanying measurement details.</p>
+    <p>(Press the space bar to begin.)</p>
+  `,
+  choices: [' '], // restricts to space bar press
+  post_trial_gap: 500
+};
+
+var ActDegree_instruction = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+    <p>In this section, you will see an object and an incomplete measurement description.</p>
+    <p>Your task is to carefully observe the object and provide an approximate value for the measurement.</p>
+    <p>You can only proceed if your approximation is within one unit of the actual value.</p>
+    <p>(Press the space bar to continue.)</p>
+  `,
+  choices: [' '], // restricts to space bar press
+  post_trial_gap: 500
+};
+
 
 /* * * * * * * * * * * * * * * * * * Open message * * * * * * * * * *  * * * * */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -100,21 +141,23 @@ const DegQSlider = `
       <p style="margin-Bottom: 2px !important;">Using the scale to answer, <b>how {label} is the pink object?</b></p>
     `;
 const EquaSlider = `
-      <p style="margin-Bottom: 2px !important;">The pink object is as <i>{label}</i> as the grey object,</p>
-      <p style="margin-Bottom: 2px !important;">On the scale, <b> where would you place the pink object?</b></p>
+      <p style="margin-Bottom: 2px !important;">The pink object is <b>as <i>{label}</i> as</b> the grey object,</p>
+      <p style="margin-Bottom: 2px !important;">On the scale, where would you place the pink object?</p>
     `;
 const CompSlider = `
-      <p style="margin-Bottom: 2px !important;">The pink object is <i>{label}er</i> than the grey object,</p>
-      <p style="margin-Bottom: 2px !important;">On the scale, <b> where would you place the pink object?</b></p>
+      <p style="margin-Bottom: 2px !important;">The pink object is <b><i>{label}er</i></b> than the grey object,</p>
+      <p style="margin-Bottom: 2px !important;">On the scale, where would you place the pink object?</p>
     `;
 const OverSlider = `
       <p style="margin-Bottom: 2px !important;">On the scale, <b> where would you place the pink object?</b></p>
     `;
 const LabelLearn = `
-      <p style="margin-Bottom: 2px !important;">The pink object is <i>{label}er</i> than the grey object.</p>
+      <p style="margin-Bottom: 2px !important;">The pink object is <b><i>{label}er</i> than</b> the grey object.</br>
+      (Press the space bar to continue.)</p>
     `;
 const MeaLearn = `
-      <p style="margin-Bottom: 2px !important;">The pink object is <i>{degree} formons</i>.</p>
+      <p style="margin-Bottom: 2px !important;">The pink object is <b><i>{degree} formons</i></b>.</br>
+      (Press the space bar to continue.) </p>
     `;
 const DualLabelLearnAct = `
       <p style="margin-Bottom: 2px !important;">Compared to the grey object, the pink object is </br>
@@ -126,7 +169,7 @@ const FouriorLabelLearnAct = `
       <strong>O</strong>: <strong>{C}er</strong>.&emsp;&emsp; <strong>P</strong>: <strong>{D}er</strong>.</p>
     `;
 const MeaLearnAct = `
-      <p style="margin-Bottom: 2px !important;">Approximate its measure (0-5 formons) using the keyboard. </br>
+      <p style="margin-Bottom: 2px !important;">Approximate its <b>measure (0-5 formons)</b> using the <b>keyboard</b>. </br>
       (Correct if error within 1 formon. ) </p>
     `;
 
