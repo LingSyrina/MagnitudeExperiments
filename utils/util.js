@@ -64,26 +64,27 @@ function getRandomLabel({ labelsGlob = [] }){
 // generate n * radius from min to max with step
 function GenerateSingleMorph({ numStimuli = 20, DegPrecision = 0.2, step = 0.05, min = 0, max = 1, labelsGlob = [] }) {
   let stimuli = Array.from({ length: Math.ceil((max - min) / step) + 1 }, (_, i) =>
-      ({ radius: min + i * step, label: getRandomLabel({labelsGlob}), degree: i * step/DegPrecision}));
+      ({ radius: parseFloat((min + i * step).toFixed(2)), label: getRandomLabel({labelsGlob}), degree: i * step/DegPrecision}));
   if (stimuli.length > numStimuli) { // this is only for debugging
         stimuli = stimuli.sort(() => Math.random() - 0.5).slice(0, numStimuli); // Shuffle the stimuli array and pick the first `numStimuli` elements
     }
   else {
     while (stimuli.length < numStimuli) {
         const randomValue = Math.floor(getRandomArbitrary(min / step, max / step)) * step;
-        stimuli.push({ radius: randomValue, label:getRandomLabel({labelsGlob}), degree: (randomValue-min)/step });
+        stimuli.push({ radius: parseFloat(randomValue.toFixed(2)), label:getRandomLabel({labelsGlob}), degree: parseFloat(((randomValue-min)/step).toFixed(2)) });
   }}
   return stimuli;
 }
 
 // generate n * radius pair from min to max with controlled differences
 function GeneratePairMorph({ numStimuli = 10, step = 0.05, min = 0, max = 1, labelDict = {} }) {
-    const differences = [step * 5, step * 9, step * 13, step * 16];
+    const differences = [parseFloat((step * 5).toFixed(2)),parseFloat((step * 9).toFixed(2)),parseFloat((step * 13).toFixed(2)),
+                        parseFloat((step * 16).toFixed(2))];
     return Array.from({ length: numStimuli }, (_, j) => {
         const diff = differences[Math.floor(Math.random() * differences.length)];
         const isP1Less = j < numStimuli / 2; // Half have p1 < p2
-        const p = Math.floor(getRandomArbitrary(min / step, (max - diff) / step)) * step;
-        const [p1, p2, Pos] = isP1Less ? [p, p + diff, true] : [p + diff, p, false]; //If isP1Less, p1 < p2, Pos=True.
+        const p = parseFloat((Math.floor(getRandomArbitrary(min / step, (max - diff) / step)) * step).toFixed(2));
+        const [p1, p2, Pos] = isP1Less ? [p, parseFloat((p + diff).toFixed(2)), true] : [parseFloat((p + diff).toFixed(2)), p, false]; //If isP1Less, p1 < p2, Pos=True.
         const [label, key] = getLabel({labelDict:labelDict, Pos:Pos, radius:[p1, p2]});
         return { radius: [p1, p2], label:label, key:key }; //key is only used for active learning trials
     });
