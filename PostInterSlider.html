@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Magnitude experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.4" type="text/javascript"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-external-html"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-canvas-slider-response"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-canvas-keyboard-response"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload"></script>
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+    <link href="https://unpkg.com/jspsych/css/jspsych.css" rel="stylesheet" type="text/css">
+    <script>
+        /** INITIALIZE jsPsych **/
+        var jsPsych = initJsPsych({
+            show_progress_bar: true,
+          });
+    </script>
+    <script src="./utils/canvasMorpher.js"></script>
+    <script src="./utils/util.js"></script>
+    <script src="./blocks/prompts.js"></script>
+    <script src="./blocks/slider_response.js"></script>
+    <script src="./blocks/block_intervention.js"></script>
+    <script src="./blocks/consent_handler.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      .jspsych-progressbar-container {
+        margin: 0px auto !important;
+      }
+      .jspsych-btn { padding: 1px 20px;
+      font-size: 15px;
+      border-color: black;
+      }
+      #jspsych-canvas-slider-response-wrapper {
+        margin: 0px auto !important;
+        margin-bottom: 30px !important;
+      }
+      .jspsych-canvas-slider-response-container {
+        margin: 0px auto !important;
+      }
+    </style>
+
+  </head>
+  <body>
+  <script type="module">
+    //Set global random seed for consistency, using string 'fixed-seed'
+    Math.seedrandom('fixed-seed');
+    //Group subjects for intervention conditions & random labelling
+    const linglabels = ['raflen', 'luprit', 'vintar', 'geleap']
+    const shuffledLabels = linglabels.sort(() => Math.random() - 0.5);
+    const [A, A1, B1, B] = shuffledLabels;
+    const DuallabelDict = {
+        neg: { "[0, 1.1]": [A, "q"] },
+        pos: { "[0, 1.1]": [B, "p"] }
+    };
+    const FouriorlabelDict = {
+        neg: { "[0, 0.5]": [A, "q"], "[0.5, 1.1]": [A1, "w"] },
+        pos: { "[0, 0.5]": [B1, "o"], "[0.5, 1.1]": [B, "p"] }
+    };
+    const DegPrecision = 0.2;
+
+    //Define trial numbers
+    const pre_trial = 2;
+    const [lab_pass, lab_act, deg_pass, deg_act] = [20,10,20,10]
+    const [degQ_trial, Equa_trial, Comp_trial, Over_tiral] = [5,5,5,0];
+    //               Methods                                      Prompts
+    //Slider        {SliderMorph, SliderPair, SliderOverlap};     {PreLabelSlider, DegQSlider, EquaSlider, CompSlider};
+    //Intervention  {MorphSingle, MorphPair};                     {LabelLearn, MeaLearn};
+    let pre_stimuli = BlockAppend({numStimuli:pre_trial, promptType:'PreLabelSlider', method:'SliderMorph'});
+    console.log(pre_stimuli);
+    // let labelDict = DuallabelDict;
+    // let lab_stimuli = BlockAppend({labelDict, numStimuli:lab_pass, promptType:'LabelLearn', method:'MorphPair'});
+    // let lab_stimuli_active = BlockAppend({labelDict, numStimuli:lab_act, promptType:'DualLabelLearnAct', method:'MorphPair'});
+    // console.log(lab_stimuli);
+    // console.log(lab_stimuli_active);
+    let labelDict = FouriorlabelDict;
+    let lab_stimuli = BlockAppend({labelDict, numStimuli:lab_pass, promptType:'LabelLearn', method:'MorphPair'});
+    let lab_stimuli_active = BlockAppend({labelDict, numStimuli:lab_act, promptType:'FouriorLabelLearnAct', method:'MorphPair'});
+    console.log(lab_stimuli);
+    console.log(lab_stimuli_active);
+
+    let deg_stimuli = BlockAppend({numStimuli:deg_pass, promptType:'MeaLearn', method:'MorphSingle'});
+    let deg_stimuli_active = BlockAppend({numStimuli:deg_pass, promptType:'MeaLearnAct', method:'MorphSingle'});
+    console.log(deg_stimuli);
+    console.log(deg_stimuli_active);
+
+    labelDict = DuallabelDict;
+    let post_stimuli = BlockAppend({labelDict, numStimuli:Comp_trial, promptType:'CompSlider', method:'SliderPair'});
+    post_stimuli = BlockAppend({stimuliSet:post_stimuli, labelDict, numStimuli:Equa_trial, promptType:'EquaSlider', method:'SliderPair'});
+    post_stimuli = BlockAppend({stimuliSet:post_stimuli, labelDict, numStimuli:degQ_trial, promptType:'DegQSlider', method:'SliderMorph'});
+    // modify the canvas size for this one? && double check the prompts
+    post_stimuli = BlockAppend({stimuliSet:post_stimuli, labelDict, numStimuli:Over_tiral, promptType:'DegQSlider', method:'SliderOverlap'});
+    console.log(post_stimuli);
+
+    //Get trials
+    var subjectID = setupSubjectID(jsPsych);
+    var consentTrial = createConsentTrial();
+    // const expID = "iPtLEVGIdxPA"; //register an new experiment via OSF
+    let condition = String(A)[0] + String(A1)[0] + String(B1)[0] + String(B)[0];
+    console.log(subjectID, condition)
+    // let group_name;
+    //var saveTrial = saveServerData(expID, subjectID, group_name, condition);
+    const prompts = getpromptTrials();
+    const preSlider = GetSlider(prompts, pre_stimuli, 'pre_intervention');
+    const postLabSlider = GetSlider(prompts, post_stimuli, 'post_label_intervention');
+    const postDegSlider = GetSlider(prompts, post_stimuli, 'post_degree_intervention');
+    const LabInterPass = GetLabelPass(prompts, lab_stimuli, 'label_intervention');
+    const LabInterActive = GetLabelActive(prompts, lab_stimuli_active, 'label_intervention');
+    const DegInterPass = GetDegreePass(prompts, deg_stimuli, 'degree_intervention');
+    const DegInterActive = GetDegreeActive(prompts, deg_stimuli_active, 'degree_intervention');
+
+    //Build timeline
+    const timeline = [];
+    //timeline.push(prompts.openning, consentTrial);
+    //timeline.push(prompts.instruct_A, preSlider); //Pre-intervention block
+    timeline.push(prompts.instruct_C, LabInterPass); //Intervention block
+    timeline.push(prompts.instruct_C, LabInterActive); //Intervention block
+    //timeline.push(prompts.instruct_B, postLabSlider); //Post-intervention block
+    //timeline.push(prompts.instruct_C, DegInterPass); //Intervention block
+    //timeline.push(prompts.instruct_C, DegInterActive); //Intervention block
+    //timeline.push(prompts.instruct_B, postDegSlider); //Post-intervention block
+    //timeline.push(prompts.waiting, saveTrial);
+    timeline.push(prompts.closing);
+
+    //Build timeline
+    const timeline = [];
+    // timeline.push(prompts.openning, consentTrial);
+    // timeline.push(prompts.PreSlider_instruction, preSlider); //Pre-intervention block
+    // timeline.push(prompts.PassLabel_instruction, LabInterPass); //Intervention block
+    // timeline.push(prompts.ActLabel_instruction, LabInterActive); //Intervention block
+    timeline.push(prompts.PostSlider_instruction, postLabSlider); //Post-intervention block
+    // timeline.push(prompts.PassDegree_instruction, DegInterPass); //Intervention block
+    // timeline.push(prompts.ActDegree_instruction, DegInterActive); //Intervention block
+    // timeline.push(prompts.PostSlider_instruction, postDegSlider); //Post-intervention block
+    //timeline.push(prompts.waiting, saveTrial);
+    timeline.push(prompts.closing);
+
+    jsPsych.run(timeline)
+  </script>
+</body>
+</html>
