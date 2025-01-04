@@ -28,7 +28,8 @@ method     | required, pick from 'SliderMorph', 'SliderPair', 'SliderOverlap'
            | 'MorphSingle', 'MorphPair' to generate morph canvas
 ```
    
-GetSlider, GetLabelPass, GetLabelActive, GetDegreePass, GetDegreeActive from slider_response.js and block_intervention.js  
+slider_response.js -- GetSlider (slider blocks);  
+block_intervention.js -- GetLabelPass, GetLabelActive, GetDegreePass, GetDegreeActive (learn blocks);  
 ```
 arg           |  value
 ---------------------------------------------------------------------------
