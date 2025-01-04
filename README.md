@@ -76,7 +76,7 @@ MorphPair     /* get a pair of morph */
 ## Stimuli generation (see util.js)
 
 ```
-option               |  var      | description
+option               |  var         | description
 -----------–--–––––––|-----------------------------------------------------------------
 GenerateSingleMorph   /* stimuli generation for MorphSingle & SliderMorph */
                      | numStimuli   |10, control the number of stimuli
@@ -87,7 +87,7 @@ GenerateSingleMorph   /* stimuli generation for MorphSingle & SliderMorph */
                      | labelsGlob   |[], assign label to stimuli for SliderMorph
                                     |(degree question trials, how {label} is ...?)
 GeneratePairMorph     /* stimuli generation for SliderOverlap, SliderPair & MorphPair */
-                     | numStimuli|10, control the number of stimuli
+                     | numStimuli   |10, control the number of stimuli
                      | step         |0.05, control the step of stimuli in [min, max]
                      | min          |0, the min end of stimulus radius
                      | max          |1, the max end of stimulus radius
@@ -95,7 +95,7 @@ GeneratePairMorph     /* stimuli generation for SliderOverlap, SliderPair & Morp
                                     |assign label to stimuli pair for label learning,
                                     |comparative slider trials ({label}er than). 
 GenerateEquaMorph     /* stimuli generation for SliderPair equative condition */ 
-                     | numStimuli|10, control the number of stimuli
+                     | numStimuli   |10, control the number of stimuli
                      | step         |0.05, control the step of stimuli in [min, max]
                      | min          |0, the min end of stimulus radius
                      | max          |1, the max end of stimulus radius
