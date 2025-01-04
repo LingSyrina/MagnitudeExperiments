@@ -135,7 +135,7 @@ function BlockAppend({stimuliSet = [], labelDict = {}, numStimuli = numStimuli, 
       };
     } else if (['MeaLearn', 'MeaLearnAct'].includes(promptType)){
       for (const stimulus of stimuli) {
-          labels = { degree: stimulus.degree };
+          labels = { degree: parseFloat((stimulus.degree).toFixed(2)) };
           stimulus.prompt = getprompts({labels, trialtype:promptType});
           stimulus.method = method;
           stimulus.condition = [0,1][Math.floor(Math.random() * 2)];
