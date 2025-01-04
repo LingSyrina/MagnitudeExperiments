@@ -64,7 +64,7 @@ function getRandomLabel({ labelsGlob = [] }){
 // generate n * radius from min to max with step
 function GenerateSingleMorph({ numStimuli = 20, DegPrecision = 0.2, step = 0.05, min = 0, max = 1, labelsGlob = [] }) {
   let stimuli = Array.from({ length: Math.ceil((max - min) / step) + 1 }, (_, i) =>
-      ({ radius: parseFloat((min + i * step).toFixed(2)), label: getRandomLabel({labelsGlob}), degree: i * step/DegPrecision}));
+      ({ radius: parseFloat((min + i * step).toFixed(2)), label: getRandomLabel({labelsGlob}), degree: parseFloat((i * step/DegPrecision + 1).toFixed(2))}));
   if (stimuli.length > numStimuli) { // this is only for debugging
         stimuli = stimuli.sort(() => Math.random() - 0.5).slice(0, numStimuli); // Shuffle the stimuli array and pick the first `numStimuli` elements
     }
