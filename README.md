@@ -47,8 +47,8 @@ const preSlider = GetSlider(prompts, pre_stimuli, 'pre_intervention'); //define 
 timeline.push(preSlider);
 ...
 ```
-# 3. Argument documentation for methods
-## Methods (see canvasMorpher.js)
+# 3. Argument documentation for canvas type & stimuli generation
+## Canvas type (see canvasMorpher.js)
 ```
 option        |  var      | description
 -----------–--|-------------------------------------------------------------------
@@ -70,5 +70,36 @@ MorphSingle   /* get a single morph */
 MorphPair     /* get a pair of morph */
               | par       |[p1, p2], radius pair that controls the morph pair
               | n         |[0, 0], noise scale value pair
+
+```
+
+## Stimuli generation (see util.js)
+
+```
+option               |  var      | description
+-----------–--–––––––|-----------------------------------------------------------------
+GenerateSingleMorph   /* stimuli generation for MorphSingle & SliderMorph */
+                     | numStimuli   |10, control the number of stimuli
+                     | DegPrecision |0.2, precision for measurement metric
+                     | step         |0.05, control the step of stimuli in [min, max]
+                     | min          |0, the min end of stimulus radius
+                     | max          |1, the max end of stimulus radius
+                     | labelsGlob   |[], assign label to stimuli for SliderMorph
+                                    |(degree question trials, how {label} is ...?)
+GeneratePairMorph     /* stimuli generation for SliderOverlap, SliderPair & MorphPair */
+                     | numStimuli|10, control the number of stimuli
+                     | step         |0.05, control the step of stimuli in [min, max]
+                     | min          |0, the min end of stimulus radius
+                     | max          |1, the max end of stimulus radius
+                     | labelDict    |{}, dict define region label for both polarities.
+                                    |assign label to stimuli pair for label learning,
+                                    |comparative slider trials ({label}er than). 
+GenerateEquaMorph     /* stimuli generation for SliderPair equative condition */ 
+                     | numStimuli|10, control the number of stimuli
+                     | step         |0.05, control the step of stimuli in [min, max]
+                     | min          |0, the min end of stimulus radius
+                     | max          |1, the max end of stimulus radius
+                     | labelsGlob   |[], assign label to stimuli for equative slider
+                                    |(as {label} as)
 
 ```
