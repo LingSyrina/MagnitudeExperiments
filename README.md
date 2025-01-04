@@ -47,8 +47,8 @@ const preSlider = GetSlider(prompts, pre_stimuli, 'pre_intervention'); //define 
 timeline.push(preSlider);
 ...
 ```
-# 3. Argument documentation for promptType and method
-## a. method (see canvasMorpher.js)
+# 3. Argument documentation for methods
+## Methods (see canvasMorpher.js)
 ```
 option        |  var      | description
 -----------–--|-------------------------------------------------------------------
@@ -72,4 +72,3 @@ MorphPair     /* get a pair of morph */
               | n         |[0, 0], noise scale value pair
 
 ```
-## b. promptType
