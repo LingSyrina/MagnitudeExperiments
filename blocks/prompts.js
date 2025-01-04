@@ -172,7 +172,7 @@ const FouriorLabelLearnAct = `
       <strong>O</strong>: <strong>{C}er</strong>.&emsp;&emsp; <strong>P</strong>: <strong>{D}er</strong>.</p>
     `;
 const MeaLearnAct = `
-      <p style="margin-Bottom: 2px !important;">Approximate its <b>measure (0-5 formons)</b> using the <b>keyboard</b>. </br>
+      <p style="margin-Bottom: 2px !important;">Approximate its <b>measure (1-6 formons)</b> using the <b>keyboard</b>. </br>
       (Correct if error within 1 formon. ) </p>
     `;
 
