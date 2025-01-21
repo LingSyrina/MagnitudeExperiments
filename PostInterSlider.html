@@ -49,7 +49,8 @@
     //Set global random seed for consistency, using string 'fixed-seed'
     Math.seedrandom('fixed-seed');
     //Group subjects for intervention conditions & random labelling
-    const linglabels = ['raflen', 'luprit', 'vintar', 'geleap']
+    //const linglabels = ['raflen', 'luprit', 'vintar', 'geleap']
+    const linglabels = ['raflen', 'luprit']
     const shuffledLabels = linglabels.sort(() => Math.random() - 0.5);
     const [A, A1, B1, B] = shuffledLabels;
     const DuallabelDict = {
@@ -106,7 +107,7 @@
     const prompts = getpromptTrials();
     const preSlider = GetSlider(prompts, pre_stimuli, 'pre_intervention');
     const postLabSlider = GetSlider(prompts, post_stimuli, 'post_label_intervention');
-    const postDegSlider = GetSlider(prompts, post_stimuli, 'post_degree_intervention');
+    const postDegSlider = GetSlider(prompts, post_stimuli, 'post_degree_intervention', true, linglabels);
     const LabInterPass = GetLabelPass(prompts, lab_stimuli, 'label_intervention');
     const LabInterActive = GetLabelActive(prompts, lab_stimuli_active, 'label_intervention');
     const DegInterPass = GetDegreePass(prompts, deg_stimuli, 'degree_intervention');
