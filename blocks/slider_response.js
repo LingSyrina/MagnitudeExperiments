@@ -1,4 +1,4 @@
-function GetSlider(prompts, block_stimuli, task_name) {
+function GetSlider(prompts, block_stimuli, task_name, showLabels = false, labels) {
   // Dynamically create the trial
   const randomizedStimuli = jsPsych.randomization.shuffle(block_stimuli);
   const createTrial = () => ({
@@ -15,6 +15,7 @@ function GetSlider(prompts, block_stimuli, task_name) {
     prompt: jsPsych.timelineVariable('prompt'),
     response_ends_trial: true,
     require_movement: true,
+    labels: showLabels ? labels : undefined,
     data: {
       task: task_name,
       stimulus: () => jsPsych.timelineVariable('radius'),
