@@ -155,11 +155,15 @@ const OverSlider = `
       <p style="margin-Bottom: 2px !important;">On the scale, <b> where would you place the pink object?</b></p>
     `;
 const LabelLearn = `
+      <p style="margin-Bottom: 2px !important;">The pink object is <b><i>{label}</i></b>.</br>
+      (Press the space bar to continue.)</p>
+    `;
+const RelLearn = `
       <p style="margin-Bottom: 2px !important;">The pink object is <b><i>{label}er</i> than</b> the grey object.</br>
       (Press the space bar to continue.)</p>
     `;
 const MeaLearn = `
-      <p style="margin-Bottom: 2px !important;">The pink object is <b><i>{degree} formons</i></b>.</br>
+      <p style="margin-Bottom: 2px !important;">The pink object is about <b><i>{degree} frms</i></b>.</br>
       (Press the space bar to continue.) </p>
     `;
 const DualLabelLearnAct = `
