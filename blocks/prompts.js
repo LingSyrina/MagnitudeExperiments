@@ -3,8 +3,8 @@
 var PreSlider_instruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
-    <p>In this section, you will see a slider. </br> 
-    Each end of the slider will have an item as a reference point. </br> 
+    <p>In this section, you will see a slider. </br>
+    Each end of the slider will have an item as a reference point. </br>
     Your task is to <b>place the pink item</b> along the slider based on the given references.</p>
     <p>(Press the space bar to begin.)</p>
   `,
@@ -15,8 +15,8 @@ var PreSlider_instruction = {
 var PostSlider_instruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
-   <p>In this section, you will see one or a pair of items. </br> 
-    Each end of the slider will have an item as a reference point. </br> 
+   <p>In this section, you will see one or a pair of items. </br>
+    Each end of the slider will have an item as a reference point. </br>
     Your task is to <b>place the pink item</b> on the slider to answer the question below the image.
     <p>(Press the space bar to begin.)</p>
   `,
@@ -119,9 +119,9 @@ function getpromptTrials() {
     PreSlider_instruction:  PreSlider_instruction,
     PostSlider_instruction:  PostSlider_instruction,
     PassLabel_instruction:  PassLabel_instruction,
-    ActLabel_instruction: ActLabel_instruction, 
+    ActLabel_instruction: ActLabel_instruction,
     PassDegree_instruction: PassDegree_instruction,
-    ActDegree_instruction: ActDegree_instruction, 
+    ActDegree_instruction: ActDegree_instruction,
     // welcome and closue
     openning: welcome,
     waiting: waiting,
@@ -166,6 +166,12 @@ const MeaLearn = `
       <p style="margin-Bottom: 2px !important;">The pink object is about <b><i>{degree} frms</i></b>.</br>
       (Press the space bar to continue.) </p>
     `;
+
+const LabelAct = `
+      <p style="margin-Bottom: 2px !important;">The pink object is </br>
+      <strong>Q</strong>: <strong>{A}</strong>.&emsp;&emsp; <strong>P</strong>: <strong>{B}</strong>.</p>
+    `;
+
 const DualLabelLearnAct = `
       <p style="margin-Bottom: 2px !important;">Compared to the grey object, the pink object is </br>
       <strong>Q</strong>: <strong>{A}er</strong>.&emsp;&emsp; <strong>P</strong>: <strong>{B}er</strong>.</p>
@@ -181,7 +187,7 @@ const MeaLearnAct = `
     `;
 
 // takes in a label dictionary, and a trial type, output the resulting prompt
-function getprompts({ labels = {}, trialtype = 'PreLabelSlider' }) {
+function getprompts({ labels = {}, trialtype}) {
     const promptTemplates = {   // Predefined prompt templates for different trial types
         // pre-intervention prompt
         PreLabelSlider: PreLabelSlider, // no label
@@ -195,7 +201,8 @@ function getprompts({ labels = {}, trialtype = 'PreLabelSlider' }) {
         MeaLearn: MeaLearn, // true label
         DualLabelLearnAct: DualLabelLearnAct,
         FouriorLabelLearnAct:FouriorLabelLearnAct,
-        MeaLearnAct: MeaLearnAct
+        MeaLearnAct: MeaLearnAct,
+        LabelAct: LabelAct
     };
     const template = promptTemplates[trialtype];
     if (!template) {

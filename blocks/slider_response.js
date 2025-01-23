@@ -15,7 +15,7 @@ function GetSlider(prompts, block_stimuli, task_name, showLabels = false, labels
     prompt: jsPsych.timelineVariable('prompt'),
     response_ends_trial: true,
     require_movement: true,
-    labels: showLabels ? labels : undefined,
+    labels: labels,
     data: {
       task: task_name,
       stimulus: () => jsPsych.timelineVariable('radius'),

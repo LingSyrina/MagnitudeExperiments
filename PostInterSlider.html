@@ -52,14 +52,10 @@
     //const linglabels = ['raflen', 'luprit', 'vintar', 'geleap']
     const linglabels = ['raflen', 'luprit']
     const shuffledLabels = linglabels.sort(() => Math.random() - 0.5);
-    const [A, A1, B1, B] = shuffledLabels;
+    const [A, B] = shuffledLabels;
     const DuallabelDict = {
         neg: { "[0, 1.1]": [A, "q"] },
         pos: { "[0, 1.1]": [B, "p"] }
-    };
-    const FouriorlabelDict = {
-        neg: { "[0, 0.5]": [A, "q"], "[0.5, 1.1]": [A1, "w"] },
-        pos: { "[0, 0.5]": [B1, "o"], "[0.5, 1.1]": [B, "p"] }
     };
     const DegPrecision = 0.2;
 
@@ -77,9 +73,10 @@
     // let lab_stimuli_active = BlockAppend({labelDict, numStimuli:lab_act, promptType:'DualLabelLearnAct', method:'MorphPair'});
     // console.log(lab_stimuli);
     // console.log(lab_stimuli_active);
-    let labelDict = FouriorlabelDict;
-    let lab_stimuli = BlockAppend({labelDict, numStimuli:lab_pass, promptType:'LabelLearn', method:'MorphPair'});
-    let lab_stimuli_active = BlockAppend({labelDict, numStimuli:lab_act, promptType:'FouriorLabelLearnAct', method:'MorphPair'});
+    let labelDict = DuallabelDict;
+    //console.log(labelDict);
+    let lab_stimuli = BlockAppend({labelDict, numStimuli:lab_pass, promptType:'LabelLearn', method:'MorphSingle'});
+    let lab_stimuli_active = BlockAppend({labelDict, numStimuli:lab_act, promptType:'LabelAct', method:'MorphSingle'});
     console.log(lab_stimuli);
     console.log(lab_stimuli_active);
 
@@ -89,24 +86,24 @@
     console.log(deg_stimuli_active);
 
     labelDict = DuallabelDict;
-    let post_stimuli = BlockAppend({labelDict, numStimuli:Comp_trial, promptType:'CompSlider', method:'SliderPair'});
-    post_stimuli = BlockAppend({stimuliSet:post_stimuli, labelDict, numStimuli:Equa_trial, promptType:'EquaSlider', method:'SliderPair'});
-    post_stimuli = BlockAppend({stimuliSet:post_stimuli, labelDict, numStimuli:degQ_trial, promptType:'DegQSlider', method:'SliderMorph'});
+    let post_stimuli = BlockAppend({labelDict, numStimuli:Comp_trial, promptType:'CompSlider', method:'MorphPair'});
+    post_stimuli = BlockAppend({stimuliSet:post_stimuli, labelDict, numStimuli:Equa_trial, promptType:'EquaSlider', method:'MorphPair'});
+    post_stimuli = BlockAppend({stimuliSet:post_stimuli, labelDict, numStimuli:degQ_trial, promptType:'DegQSlider', method:'MorphSingle'});
     // modify the canvas size for this one? && double check the prompts
-    post_stimuli = BlockAppend({stimuliSet:post_stimuli, labelDict, numStimuli:Over_tiral, promptType:'DegQSlider', method:'SliderOverlap'});
+    //post_stimuli = BlockAppend({stimuliSet:post_stimuli, labelDict, numStimuli:Over_tiral, promptType:'DegQSlider', method:'SliderOverlap'});
     console.log(post_stimuli);
 
     //Get trials
     var subjectID = setupSubjectID(jsPsych);
     var consentTrial = createConsentTrial();
     // const expID = "iPtLEVGIdxPA"; //register an new experiment via OSF
-    let condition = String(A)[0] + String(A1)[0] + String(B1)[0] + String(B)[0];
+    let condition = String(A)[0] + String(B)[0];
     console.log(subjectID, condition)
     // let group_name;
     //var saveTrial = saveServerData(expID, subjectID, group_name, condition);
     const prompts = getpromptTrials();
     const preSlider = GetSlider(prompts, pre_stimuli, 'pre_intervention');
-    const postLabSlider = GetSlider(prompts, post_stimuli, 'post_label_intervention');
+    const postLabSlider = GetSlider(prompts, post_stimuli, 'post_label_intervention', true, linglabels);
     const postDegSlider = GetSlider(prompts, post_stimuli, 'post_degree_intervention', true, linglabels);
     const LabInterPass = GetLabelPass(prompts, lab_stimuli, 'label_intervention');
     const LabInterActive = GetLabelActive(prompts, lab_stimuli_active, 'label_intervention');
@@ -119,8 +116,8 @@
     // timeline.push(prompts.PreSlider_instruction, preSlider); //Pre-intervention block
     // timeline.push(prompts.PassLabel_instruction, LabInterPass); //Intervention block
     // timeline.push(prompts.ActLabel_instruction, LabInterActive); //Intervention block
-    timeline.push(prompts.PostSlider_instruction, postLabSlider); //Post-intervention block
-    // timeline.push(prompts.PassDegree_instruction, DegInterPass); //Intervention block
+    // timeline.push(prompts.PostSlider_instruction, postLabSlider); //Post-intervention block
+     timeline.push(prompts.PassDegree_instruction, DegInterPass); //Intervention block
     // timeline.push(prompts.ActDegree_instruction, DegInterActive); //Intervention block
     // timeline.push(prompts.PostSlider_instruction, postDegSlider); //Post-intervention block
     //timeline.push(prompts.waiting, saveTrial);

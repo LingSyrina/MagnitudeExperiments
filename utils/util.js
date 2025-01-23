@@ -110,6 +110,7 @@ function BlockAppend({stimuliSet = [], labelDict = {}, numStimuli = numStimuli, 
     ? [Object.values(labelDict['neg'])[0][0], // First value in 'pos'
       Object.values(labelDict['pos']).slice(-1)[0][0] ]// Last value in 'neg'
     : [];
+    //console.log(labelDict);
     // Check the method and call the appropriate function
     if (promptType === 'EquaSlider') {  //handler for slider_equative trials
         stimuli = GenerateEquaMorph({ numStimuli, labelsGlob });
@@ -118,7 +119,7 @@ function BlockAppend({stimuliSet = [], labelDict = {}, numStimuli = numStimuli, 
     } else {
         stimuli = GenerateSingleMorph({ numStimuli, labelsGlob });
     };
-    if (promptType === 'DualLabelLearnAct'){
+    if (["LabelAct", 'DualLabelLearnAct'].includes(promptType)){
       labels = {A: Object.values(labelDict['neg'])[0][0], B:Object.values(labelDict['pos'])[0][0]};
       for (const stimulus of stimuli) {
           stimulus.prompt = getprompts({labels, trialtype:promptType});
@@ -135,7 +136,7 @@ function BlockAppend({stimuliSet = [], labelDict = {}, numStimuli = numStimuli, 
       };
     } else if (['MeaLearn', 'MeaLearnAct'].includes(promptType)){
       for (const stimulus of stimuli) {
-          labels = { degree: parseFloat((stimulus.degree).toFixed(2)) };
+          labels = { degree: parseFloat((stimulus.degree).toFixed(0)) };
           stimulus.prompt = getprompts({labels, trialtype:promptType});
           stimulus.method = method;
           stimulus.condition = [0,1][Math.floor(Math.random() * 2)];
