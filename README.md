@@ -1,5 +1,7 @@
 Go to the [main experiment website](https://lingsyrina.github.io/MagnitudeExperiments/experiment.html)
-
+For experiment 1: check [current web](https://lingsyrina.github.io/MagnitudeExperiments/exp1_adv_MP.html)
+For experiment 2: check [current web](https://lingsyrina.github.io/MagnitudeExperiments/exp2_IMPDMP.html)
+For experiment 3: check [current web](https://lingsyrina.github.io/MagnitudeExperiments/exp3_adjLev.html)
 # 1. Code structure
 ```
 root --- experiment.html             /* The main experiment html         */  
