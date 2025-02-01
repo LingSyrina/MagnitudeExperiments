@@ -76,7 +76,7 @@ function GetLabelActive(prompts, block_stimuli, task_name) {
       task: task_name,
       stimulus: () => jsPsych.timelineVariable('radius'),
       method: () => jsPsych.timelineVariable('method'),
-      key: () => jsPsych.timelineVariable('key'),
+      key: () => task_name.includes('label') ? jsPsych.timelineVariable('key') : jsPsych.timelineVariable('LevKey'),
     },
     on_finish: function(data) { // Score the response as correct or incorrect.
       if (data.response != data.key) {
@@ -96,6 +96,7 @@ function GetLabelActive(prompts, block_stimuli, task_name) {
   };
 }
 
+// following functions are not used at the moment
 function GetDegreePass(prompts, block_stimuli, task_name) {
   // Dynamically create the trial
   const randomizedStimuli = jsPsych.randomization.shuffle(block_stimuli);

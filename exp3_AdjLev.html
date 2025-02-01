@@ -52,42 +52,56 @@
     var subjectID = setupSubjectID(jsPsych);
     var consentTrial = createConsentTrial();
     const expID = "jUqyaCUPaMCr"; //register an new experiment via OSF
-    window.linglabels = Shuffle(['raflen', 'luprit']);
-    const [A, B] = linglabels;
-    const labelDict = {
-          "[0, 0.5]": [A, 0],
-          "[0.5, 1.1]": [B, 1]
-    };
+    let A, B, C, labelDict;
+    if (group === 0){
+      window.linglabels = Shuffle(['raflen', 'luprit', 'vintar']);
+      [A, B, C] = linglabels;
+      labelDict = {
+           "[0, 0.35]": [A, 0],
+           "[0.35, 0.70]": [B, 1],
+           "[0.70, 1.1]": [C, 2]
+      };
+    } else{
+      window.linglabels = ['unluprit', 'luprit'];
+      [A, B] = linglabels;
+      labelDict = {
+            "[0, 0.5]": [A, 0],
+            "[0.5, 1.1]": [B, 1]
+      };
+    }
     const DegPrecision = 0.15;
-    var labelCond = (group === 0) ? 'Adv' : 'MP';
-    let condition = String(A)[0] + String(B)[0] + labelCond;
-    console.log(subjectID, condition)
+    const labelCond = (group === 0) ? 'tri' : 'pre';
+    let condition = String(A)[0] + String(B)[0];
+    console.log(subjectID, labelCond, condition)
     var saveTrial = saveServerData(expID, subjectID, labelCond, condition);
     //Set random seed for consistency, using string 'fixed-seed'
     Math.seedrandom('fixed-seed'); // random generated order per trial are same across subjects
 
     //Define trial numbers
     const pre_trial = 20;
-    const [lab_pass, lab_act, rel_pass, rel_act, abs_pass, abs_act] = [12,12,12,12,12,12];
-    const [degQ_trial, Equa_trial, Comp_trial] = [8,8,8];
+    const [lab_pass, lab_act, abs_pass, abs_act] = [12, 12, 12, 12];
+    const [label_trial, degQ_trial, Equa_trial, Comp_trial] = [10, 8, 8, 8];
     //               Methods                                      Prompts
     //Slider        {SliderMorph, SliderPair, SliderOverlap};     {PreLabelSlider, DegQSlider, EquaSlider, CompSlider};
     //Intervention  {MorphSingle, MorphPair};                     {LabelLearn, MeaLearn};
     let pre_stimuli = BlockAppend({labelDict, numStimuli:pre_trial, trialType: 'PreLabelSlider'});
     console.log(pre_stimuli);
 
-    let lab_stimuli = BlockAppend({labelDict, numStimuli:lab_pass, trialType: 'AbsLearn', labelType: 'Bare'});
-    let lab_stimuli_active = BlockAppend({labelDict, numStimuli:lab_act, trialType:'LabLearnAct', labelType:'Bare'});
-    console.log(lab_stimuli);
-    console.log(lab_stimuli_active);
-    let rel_stimuli = BlockAppend({labelDict, numStimuli:rel_pass, trialType: 'RelLearn', labelType: labelCond});
-    let rel_stimuli_active = BlockAppend({labelDict, numStimuli:rel_act, trialType:'RelLearnAct', labelType:labelCond});
-    console.log(rel_stimuli);
-    console.log(rel_stimuli_active);
-    let abs_stimuli = BlockAppend({labelDict, numStimuli:abs_pass, trialType: 'AbsLearn', labelType: labelCond});
-    let abs_stimuli_active = BlockAppend({labelDict, numStimuli:abs_act, trialType:'AbsLearnAct', labelType:labelCond});
-    console.log(abs_stimuli);
-    console.log(abs_stimuli_active);
+    let lab_stimuli_1 = BlockAppend({labelDict, numStimuli:lab_pass/2, trialType: 'LabLearn', labelType: 'Bare'});
+    let lab_stimuli_active_1 = BlockAppend({labelDict, numStimuli:lab_act/2, trialType:'LabLearnAct', labelType:'Bare'});
+    let lab_stimuli_2 = BlockAppend({labelDict, numStimuli:lab_pass/2, trialType: 'LabLearn', labelType: 'Bare'});
+    let lab_stimuli_active_2 = BlockAppend({labelDict, numStimuli:lab_act/2, trialType:'LabLearnAct', labelType:'Bare'});
+    console.log(lab_stimuli_1, lab_stimuli_2);
+    console.log(lab_stimuli_active_1, lab_stimuli_active_2);
+    let abs_stimuli_1 = BlockAppend({labelDict, numStimuli:abs_pass/2, trialType: 'AbsLearn', labelType: 'MP'});
+    let abs_stimuli_active_1 = BlockAppend({labelDict, numStimuli:abs_act/2, trialType:'AbsLearnAct', labelType:'MP'});
+    let abs_stimuli_2 = BlockAppend({labelDict, numStimuli:abs_pass/2, trialType: 'AbsLearn', labelType: 'MP'});
+    let abs_stimuli_active_2 = BlockAppend({labelDict, numStimuli:abs_act/2, trialType:'AbsLearnAct', labelType:'MP'});
+    console.log(abs_stimuli_1, abs_stimuli_2);
+    console.log(abs_stimuli_active_1, abs_stimuli_active_2);
+
+    let cat_stimuli = BlockAppend({labelDict, numStimuli:lab_act, trialType:'LabLearnAct', labelType:'Bare'});
+    console.log(cat_stimuli);
 
     let post_stimuli = BlockAppend({labelDict, numStimuli:Comp_trial, trialType:'CompSlider'});
     post_stimuli = BlockAppend({stimuliSet:post_stimuli, labelDict, numStimuli:Equa_trial, trialType:'EquaSlider'});
@@ -99,27 +113,28 @@
     const preSlider = GetSlider(prompts, pre_stimuli, 'pre_intervention');
     const postLabSlider = GetSlider(prompts, post_stimuli, 'post_label_intervention');
     const postDegSlider = GetSlider(prompts, post_stimuli, 'post_degree_intervention');
-    const LabInterPass = GetLabelPass(prompts, lab_stimuli, 'label_intervention');
-    const LabInterActive = GetLabelActive(prompts, lab_stimuli_active, 'label_intervention');
-    const RelInterPass = GetLabelPass(prompts, rel_stimuli, 'rel_intervention');
-    const RelInterActive = GetLabelActive(prompts, rel_stimuli_active, 'rel_intervention');
-    const AbsInterPass = GetLabelPass(prompts, abs_stimuli, 'abs_intervention');
-    const AbsInterActive = GetLabelActive(prompts, abs_stimuli_active, 'abs_intervention');
+    const postLabCat = GetLabelActive(prompts, cat_stimuli, 'post_label_cat');
+    const postDegCat = GetLabelActive(prompts, cat_stimuli, 'post_degree_cat');
+    const LabInterPass1 = GetLabelPass(prompts, lab_stimuli_1, 'label_intervention');
+    const LabInterActive1 = GetLabelActive(prompts, lab_stimuli_active_1, 'label_intervention');
+    const LabInterPass2 = GetLabelPass(prompts, lab_stimuli_2, 'label_intervention');
+    const LabInterActive2 = GetLabelActive(prompts, lab_stimuli_active_2, 'label_intervention');
+    const AbsInterPass1 = GetLabelPass(prompts, abs_stimuli_1, 'abs_intervention');
+    const AbsInterActive1 = GetLabelActive(prompts, abs_stimuli_active_1, 'abs_intervention');
+    const AbsInterPass2 = GetLabelPass(prompts, abs_stimuli_2, 'abs_intervention');
+    const AbsInterActive2 = GetLabelActive(prompts, abs_stimuli_active_2, 'abs_intervention');
 
     //Build timeline
     const timeline = [];
     timeline.push(prompts.openning);
     //timeline.push(consentTrial);
     timeline.push(prompts.PreSlider_instruction, preSlider); //Pre-intervention block
-    timeline.push(prompts.PassLabel_instruction, LabInterPass); //Intervention block
-    timeline.push(prompts.ActLabel_instruction, LabInterActive); //Intervention block
-    timeline.push(prompts.PostSlider_instruction, postLabSlider); //Post-intervention block
-    timeline.push(prompts.PassDegree_instruction, RelInterPass); //Intervention block
-    timeline.push(prompts.ActDegree_instruction, RelInterActive); //Intervention block
-    timeline.push(prompts.PostSlider_instruction, postDegSlider); //Post-intervention block
-    timeline.push(prompts.PassDegree_instruction, AbsInterPass); //Intervention block
-    timeline.push(prompts.ActDegree_instruction, AbsInterActive); //Intervention block
-    timeline.push(prompts.PostSlider_instruction, postDegSlider); //Post-intervention block
+    timeline.push(prompts.PassLabel_instruction, LabInterPass1, prompts.ActLabel_instruction, LabInterActive1,
+                  prompts.PassLearn_continue, LabInterPass2, prompts.ActLearn_continue, LabInterActive2); //Intervention block
+    timeline.push(prompts.PostSlider_instruction, postLabSlider, postLabCat); //Post-intervention block
+    timeline.push(prompts.PassAbs_instruction, AbsInterPass1, prompts.ActAbs_instruction, AbsInterActive1,
+                  prompts.PassLearn_continue, AbsInterPass2, prompts.ActLearn_continue, AbsInterActive2); //Intervention block
+    timeline.push(prompts.PostSlider_instruction, postDegSlider, postDegCat); //Post-intervention block
     timeline.push(prompts.waiting, saveTrial);
     timeline.push(prompts.closing);
 
