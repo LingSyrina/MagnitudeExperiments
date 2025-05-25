@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Magnitude experiment</title>
+    <script src="https://unpkg.com/jspsych@7.3.4" type="text/javascript"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-external-html"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response"></script>
+    <!-- <script src="https://unpkg.com/@jspsych/plugin-canvas-slider-response"></script> -->
+    <script src="external/plugin-canvas-slider-response.js"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-canvas-keyboard-response"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload"></script>
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+    <link href="https://unpkg.com/jspsych/css/jspsych.css" rel="stylesheet" type="text/css">
+    <script>
+        /** INITIALIZE jsPsych **/
+        var jsPsych = initJsPsych({
+            show_progress_bar: true,
+          });
+    </script>
+    <script src="./utils/blob.js"></script>
+    <script src="./utils/draw.js"></script>
+    <script src="./utils/canvasMorpher.js"></script>
+    <script src="./utils/util.js"></script>
+    <script src="./blocks/prompts.js"></script>
+    <script src="./blocks/slider_response.js"></script>
+    <script src="./blocks/block_intervention.js"></script>
+    <script src="./blocks/consent_handler.js"></script>
+    <script src="./utils/logsaver.js"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      .jspsych-progressbar-container {
+        margin: 0px auto !important;
+      }
+      .jspsych-btn { padding: 1px 20px;
+      font-size: 15px;
+      border-color: black;
+      }
+      #jspsych-canvas-slider-response-wrapper {
+        margin: 0px auto !important;
+        margin-bottom: 30px !important;
+      }
+      .jspsych-canvas-slider-response-container {
+        margin: 0px auto !important;
+      }
+      .inactive-slider::-webkit-slider-thumb {
+        background-color: transparent;
+        border: none;
+        opacity: 0.5;
+      }
+      .inactive-slider::-moz-range-thumb {
+        background-color: #ccc;
+        border: 1px solid #aaa;
+      }
+    </style>
+
+  </head>
+  <body>
+  <script type="module">
+    //set global random before random seed to garantee it's non-deterministic
+    // global random variables including: linguistic label assignment, By-group condition
+    const group = [0,1][Math.floor(Math.random() * 2)]; // get group_name;
+    var subjectID = setupSubjectID(jsPsych);
+    var consentTrial = createConsentTrial();
+    const expID = "jUqyaCUPaMCr"; //register an new experiment via OSF
+    window.linglabels = Shuffle(['raflen', 'luprit']);
+    const [A, B] = linglabels;
+    const labelDict = {
+          "[[0, 0.5], [0, 0.1]]": [A, 0],
+          "[[0.5, 1.1], [1, 1.1]]": [B, 1]
+    };
+    var labelCond = (group === 0) ? 'NOM' : 'ORD';
+    let condition = String(A)[0] + String(B)[0] + labelCond;
+    // labelCond = 'ORD';
+    console.log(subjectID, condition)
+    var saveTrial = saveServerData(expID, subjectID, labelCond, condition);
+    //Set random seed for consistency, using string 'fixed-seed'
+    Math.seedrandom('fixed-seed'); // random generated order per trial are same across subjects
+    let blobs = null;
+    window.sharedBlobsReady = loadBlobsFromJSON('./design/blobs.json').then(blobs => {
+      window.sharedBlobs = blobs;
+    });
+    // console.log("Cought blobs", blobs);
+
+    //Define trial numbers
+    var pre_trial = 20;
+    var learn = 48;
+    var PassActRatio = [10, 14, 10, 14];
+    var post_label = 20; // devider of 4
+
+    //debug block
+    var pre_trial = 2;
+    var learn = 4;
+    var PassActRatio = [1, 1, 1, 1];
+    var post_label = 4; // devider of 4
+
+    //               Methods                                      Prompts
+    //Slider        {SliderMorph, SliderPair, SliderOverlap};     {PreLabelSlider, DegQSlider, EquaSlider, CompSlider};
+    //Intervention  {MorphSingle, MorphPair};                     {LabelLearn, MeaLearn};
+    const slider_config = [{radiusRange:[0,1], randRange:[0,0], numStimuli:pre_trial}]
+    let pre_stimuli = BlockAppend({labelDict, configs: slider_config, trialType: 'PreLabelSlider'});
+    console.log(`${pre_trial} Preslider baseline stimuli:`, pre_stimuli);
+
+    const norm_config = [{radiusRange:[0,0.3], randRange:[0,0], numStimuli:learn/2},
+                        {radiusRange:[0.7,1], randRange:[1,1], numStimuli:learn/2}]
+    let norm_learn = BlockAppend({labelDict, configs: norm_config, passActRatio: PassActRatio, trialType: 'LabLearn', labelType: 'Bare'});
+    console.log("Norminal learn:", norm_learn);
+
+    const comp_config = [{radiusRange:[0,0.3], randRange:[0,0]},
+                        {radiusRange:[0.7,1], randRange:[1,1]}]
+    let comp_learn = BlockAppend({labelDict, configs: comp_config, numStimuli:learn, passActRatio: PassActRatio, trialType:'CompLearn', labelType:labelCond});
+    console.log("Ordinal learn:", comp_learn);
+
+    const test_config = [{radiusRange:[0,0.45], randRange:[0,0], numStimuli:post_label/4},
+                        {radiusRange:[0.5,1], randRange:[1,1], numStimuli:post_label/4},
+                        {radiusRange:[0,0.45], randRange:[1,1], numStimuli:post_label/4},
+                        {radiusRange:[0.5,1], randRange:[0,0], numStimuli:post_label/4}]
+    let cat_stimuli = BlockAppend({labelDict, configs: test_config, trialType:'NormLab', labelType:'Bare'});
+    let int_stimuli = BlockAppend({labelDict, configs: test_config, trialType:'IntLab', labelType:'Bare'});
+    console.log("Predicate test:", cat_stimuli);
+    console.log("Modifier test:", int_stimuli);
+
+    downloadConsoleLogs();
+
+    //Get trials
+    const prompts = getpromptTrials();
+    const preSlider = GetSlider(prompts, pre_stimuli, 'pre_slider');
+
+    const postLabCat = GetLabel(prompts, cat_stimuli, 'post_label_cat');
+    const postIntCat = GetIntLabel(prompts, int_stimuli, 'post_label_cat');
+
+    const LabInterPass1 = GetLabelPass(prompts, norm_learn[0], 'label_intervention');
+    const LabInterActive1 = GetLabelActive(prompts, norm_learn[1], 'label_intervention_act');
+    const LabInterPass2 = GetLabelPass(prompts, norm_learn[2], 'label_intervention');
+    const LabInterActive2 = GetLabelActive(prompts, norm_learn[3], 'label_intervention_act');
+
+    const RelInterPass1 = GetLabelPass(prompts, comp_learn[0], 'label_intervention');
+    const RelInterActive1 = GetLabelActive(prompts, comp_learn[1], 'label_intervention_act');
+    const RelInterPass2 = GetLabelPass(prompts, comp_learn[2], 'label_intervention');
+    const RelInterActive2 = GetLabelActive(prompts, comp_learn[3], 'label_intervention_act');
+
+    //Build timeline
+    const timeline = [];
+    timeline.push(prompts.openning);
+    timeline.push(consentTrial);
+    timeline.push(prompts.PreSlider_instruction, preSlider); //Pre-intervention block
+    if (labelCond == 'NOM'){
+      timeline.push(prompts.PassLabel_instruction, LabInterPass1, prompts.ActLabel_instruction, LabInterActive1,
+                    prompts.PassLearn_continue, LabInterPass2, prompts.ActLearn_continue, LabInterActive2); //Intervention block
+      timeline.push(prompts.PostSlider_instruction, postLabCat); //Post-intervention block
+      timeline.push(prompts.PostSlider_instruction, postIntCat);
+    }
+    if (labelCond == 'ORD'){
+      timeline.push(prompts.PassRel_instruction, RelInterPass1, prompts.ActRel_instruction, RelInterActive2,
+                  prompts.PassLearn_continue, RelInterPass2, prompts.ActLearn_continue, RelInterActive2); //Intervention block
+      timeline.push(prompts.PostSlider_instruction, postIntCat);
+      timeline.push(prompts.PostSlider_instruction, postLabCat); //Post-intervention block
+    }
+    timeline.push(prompts.waiting, saveTrial);
+    timeline.push(prompts.closing);
+
+    jsPsych.run(timeline)
+  </script>
+</body>
+</html>
