@@ -163,14 +163,14 @@
     }
     timeline.push(prompts.waiting, saveTrial);
     //timeline.push(prompts.closing);
-    const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=731&credit_token=ac13a1489bd94131a49ef0ed33f416e5&id=" + subjectID;
+    const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=731&credit_token=ac13a1489bd94131a49ef0ed33f416e5&survey_code=" + subjectID;
     console.log(sonaRedirectURL);
     timeline.push({
       type: jsPsychHtmlKeyboardResponse,
       stimulus: "<p>Thank you for participating!</p><p>Press any key to complete the study.</p>",
       response_ends_trial: true,
       on_finish: function() {
-        if (getUrlParameter('id')) {
+        if (subjectID) {
           window.location.href = sonaRedirectURL;
         }
       }
