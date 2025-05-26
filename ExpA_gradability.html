@@ -100,29 +100,29 @@
     //Slider        {SliderMorph, SliderPair, SliderOverlap};     {PreLabelSlider, DegQSlider, EquaSlider, CompSlider};
     //Intervention  {MorphSingle, MorphPair};                     {LabelLearn, MeaLearn};
     const slider_config = [{radiusRange:[0,1], randRange:[0,0], numStimuli:pre_trial}]
-    window.pre_stimuli = BlockAppend({labelDict, configs: slider_config, trialType: 'PreLabelSlider'});
+    const pre_stimuli = BlockAppend({labelDict, configs: slider_config, trialType: 'PreLabelSlider'});
     console.log(`${pre_trial} Preslider baseline stimuli:`, pre_stimuli);
 
     const norm_config = [{radiusRange:[0,0.3], randRange:[0,0], numStimuli:learn/2},
                         {radiusRange:[0.7,1], randRange:[1,1], numStimuli:learn/2}]
-    window.norm_learn = BlockAppend({labelDict, configs: norm_config, passActRatio: PassActRatio, trialType: 'LabLearn', labelType: 'Bare'});
+    const norm_learn = BlockAppend({labelDict, configs: norm_config, passActRatio: PassActRatio, trialType: 'LabLearn', labelType: 'Bare'});
     console.log("Norminal learn:", norm_learn);
 
     const comp_config = [{radiusRange:[0,0.3], randRange:[0,0]},
                         {radiusRange:[0.7,1], randRange:[1,1]}]
-    window.comp_learn = BlockAppend({labelDict, configs: comp_config, numStimuli:learn, passActRatio: PassActRatio, trialType:'CompLearn', labelType:labelCond});
+    const comp_learn = BlockAppend({labelDict, configs: comp_config, numStimuli:learn, passActRatio: PassActRatio, trialType:'CompLearn', labelType:labelCond});
     console.log("Ordinal learn:", comp_learn);
 
     const test_config = [{radiusRange:[0,0.45], randRange:[0,0], numStimuli:post_label/4},
                         {radiusRange:[0.5,1], randRange:[1,1], numStimuli:post_label/4},
                         {radiusRange:[0,0.45], randRange:[1,1], numStimuli:post_label/4},
                         {radiusRange:[0.5,1], randRange:[0,0], numStimuli:post_label/4}]
-    window.cat_stimuli = BlockAppend({labelDict, configs: test_config, trialType:'NormLab', labelType:'Bare'});
-    window.int_stimuli = BlockAppend({labelDict, configs: test_config, trialType:'IntLab', labelType:'Bare'});
+    const cat_stimuli = BlockAppend({labelDict, configs: test_config, trialType:'NormLab', labelType:'Bare'});
+    const int_stimuli = BlockAppend({labelDict, configs: test_config, trialType:'IntLab', labelType:'Bare'});
     console.log("Predicate test:", cat_stimuli);
     console.log("Modifier test:", int_stimuli);
 
-    downloadConsoleLogs();
+    downloadConsoleLogs(pre_stimuli, norm_learn, comp_learn, cat_stimuli, int_stimuli);
 
     //Get trials
     const prompts = getpromptTrials();
