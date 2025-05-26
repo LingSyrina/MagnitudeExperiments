@@ -27,7 +27,7 @@ var PostSlider_instruction = {
 var PassLabel_instruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
-    <p>In this section, you will see an objects and a description of the object.</p>
+    <p>In this section, you will see an object and a description of the object.</p>
      <p>Carefully observe the object and the accompanying line describing the object.</p>
      <p>(Press the space bar to begin.)</p>
   `,
