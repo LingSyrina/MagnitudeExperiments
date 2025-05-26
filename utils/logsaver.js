@@ -8,50 +8,63 @@
         originalLog.apply(console, args);
     };
 
-    function downloadLogsAsTXTandCSV() {
+    function downloadStimuliAsCSV() {
         try {
-            window.collectedLogs = logs;
+          // Inside the downloadStimuliAsCSV function:
+            const flattenStimulusArray = (data) => {// If array of arrays, flatten to array of objects
+                if (Array.isArray(data[0])) {
+                    return data.flat(); // Or use .reduce((a,b) => a.concat(b), []) if .flat() is unsupported
+                  }
+                  return data;
+                };
 
-            const logString = logs.join('\n');
-            const timestamp = new Date().toISOString().replace(/[:.]/g, "_");
-            const baseFilename = `console_logs_${timestamp}`;
+            const stimulusSets = [
+              { label: "Preslider baseline stimuli", data: flattenStimulusArray(window.pre_stimuli) },
+              { label: "Norminal learn", data: flattenStimulusArray(window.norm_learn) },
+              { label: "Ordinal learn", data: flattenStimulusArray(window.comp_learn) },
+              { label: "Predicate test", data: flattenStimulusArray(window.cat_stimuli) },
+              { label: "Modifier test", data: flattenStimulusArray(window.int_stimuli) }
+            ];
 
-            // Save TXT
-            const txtBlob = new Blob([logString], { type: 'text/plain' });
-            const txtLink = document.createElement("a");
-            txtLink.href = URL.createObjectURL(txtBlob);
-            txtLink.download = `${baseFilename}.txt`;
-            document.body.appendChild(txtLink);
-            txtLink.click();
-            document.body.removeChild(txtLink);
+            // Flatten all stimulus objects into one array with type labels
+            const allStimuli = [];
 
-            // Convert to CSV: timestamp,message
-            const csvHeader = "timestamp,message\n";
-            const csvRows = logs.map(line => {
-                const match = line.match(/^\[(.*?)\] (.*)$/);
-                if (match) {
-                    const [, timestamp, message] = match;
-                    return `"${timestamp}","${message.replace(/"/g, '""')}"`;
-                } else {
-                    return `"","${line.replace(/"/g, '""')}"`; // fallback if format is off
+            for (const set of stimulusSets) {
+                for (const stim of set.data) {
+                    const entry = { StimulusType: set.label, ...stim };
+                    allStimuli.push(entry);
                 }
-            });
-            const csvContent = csvHeader + csvRows.join('\n');
+            }
 
-            // Save CSV
-            const csvBlob = new Blob([csvContent], { type: 'text/csv' });
-            const csvLink = document.createElement("a");
-            csvLink.href = URL.createObjectURL(csvBlob);
-            csvLink.download = `${baseFilename}.csv`;
-            document.body.appendChild(csvLink);
-            csvLink.click();
-            document.body.removeChild(csvLink);
+            // Get all unique keys across all stimuli (for CSV header)
+            const allKeys = Array.from(new Set(allStimuli.flatMap(obj => Object.keys(obj))));
+
+            // Build CSV
+            const csvHeader = allKeys.join(",") + "\n";
+            const csvRows = allStimuli.map(stim => {
+                return allKeys.map(key => {
+                    const val = stim[key];
+                    return `"${(val !== undefined ? String(val).replace(/"/g, '""') : "")}"`;
+                }).join(",");
+            });
+
+            const csvContent = csvHeader + csvRows.join("\n");
+
+            // Download
+            const timestamp = new Date().toISOString().replace(/[:.]/g, "_");
+            const filename = `stimuli_data_${timestamp}.csv`;
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
         } catch (err) {
-            console.error("downloadLogsAsTXTandCSV failed:", err);
+            console.error("downloadStimuliAsCSV failed:", err);
         }
     }
 
-    // Expose function globally
-    window.downloadConsoleLogs = downloadLogsAsTXTandCSV;
+    window.downloadConsoleLogs = downloadStimuliAsCSV;
 })();
