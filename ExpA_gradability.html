@@ -166,9 +166,9 @@
     const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=731&credit_token=ac13a1489bd94131a49ef0ed33f416e5&id=" + subjectID;
     console.log(sonaRedirectURL);
     timeline.push({
-      type: jsPsychHtmlButtonResponse,
-      stimulus: "<p>Thank you for participating!</p><p>Click below to complete the study.</p>",
-      choices: ["Finish"],
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: "<p>Thank you for participating!</p><p>Press any key to complete the study.</p>",
+      response_ends_trial: true,
       on_finish: function() {
         if (getUrlParameter('id')) {
           window.location.href = sonaRedirectURL;
