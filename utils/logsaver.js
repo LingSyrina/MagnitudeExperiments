@@ -8,7 +8,7 @@
         originalLog.apply(console, args);
     };
 
-    function downloadStimuliAsCSV() {
+    function downloadStimuliAsCSV(pre_stimuli, norm_learn, comp_learn, cat_stimuli, int_stimuli) {
         try {
             const flattenStimulusArray = (data) => {// If array of arrays, flatten to array of objects
                 if (Array.isArray(data[0])) {
@@ -17,11 +17,11 @@
                   return data;
                 };
             const stimulusSets = [
-              { label: "Preslider baseline stimuli", data: flattenStimulusArray(window.pre_stimuli) },
-              { label: "Norminal learn", data: flattenStimulusArray(window.norm_learn) },
-              { label: "Ordinal learn", data: flattenStimulusArray(window.comp_learn) },
-              { label: "Predicate test", data: flattenStimulusArray(window.cat_stimuli) },
-              { label: "Modifier test", data: flattenStimulusArray(window.int_stimuli) }
+              { label: "Preslider baseline stimuli", data: flattenStimulusArray(pre_stimuli) },
+              { label: "Norminal learn", data: flattenStimulusArray(norm_learn) },
+              { label: "Ordinal learn", data: flattenStimulusArray(comp_learn) },
+              { label: "Predicate test", data: flattenStimulusArray(cat_stimuli) },
+              { label: "Modifier test", data: flattenStimulusArray(int_stimuli) }
             ];
             
             // Flatten all stimulus objects into one array with type labels
