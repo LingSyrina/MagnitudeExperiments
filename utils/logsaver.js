@@ -10,14 +10,12 @@
 
     function downloadStimuliAsCSV() {
         try {
-          // Inside the downloadStimuliAsCSV function:
             const flattenStimulusArray = (data) => {// If array of arrays, flatten to array of objects
                 if (Array.isArray(data[0])) {
                     return data.flat(); // Or use .reduce((a,b) => a.concat(b), []) if .flat() is unsupported
                   }
                   return data;
                 };
-
             const stimulusSets = [
               { label: "Preslider baseline stimuli", data: flattenStimulusArray(window.pre_stimuli) },
               { label: "Norminal learn", data: flattenStimulusArray(window.norm_learn) },
@@ -60,7 +58,6 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
         } catch (err) {
             console.error("downloadStimuliAsCSV failed:", err);
         }
