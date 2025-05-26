@@ -1,6 +1,6 @@
 (function () {
-    let logs = []; // Array to store log messages
-
+    let logs = []; 
+    
     // Override console.log to capture logs
     const originalLog = console.log;
     console.log = function (...args) {
@@ -23,7 +23,7 @@
               { label: "Predicate test", data: flattenStimulusArray(window.cat_stimuli) },
               { label: "Modifier test", data: flattenStimulusArray(window.int_stimuli) }
             ];
-
+            
             // Flatten all stimulus objects into one array with type labels
             const allStimuli = [];
 
