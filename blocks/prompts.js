@@ -115,6 +115,29 @@ var ActLearn_continue = {
   post_trial_gap: 500
 };
 
+var Postlab_norm = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+    <p>Great job so far! Now let’s move on to some real decisions.</p>
+    <p>In this part, you’ll see object(s) on the screen. </p>
+    <p>Your task is to select the description that best fits what you see. </p>
+    <p>Please respond as accurately and intuitively as possible.</p>
+  `,
+  choices: [' '], // restricts to space bar press
+  post_trial_gap: 500
+};
+
+var Postlab_mod = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+    <p>You're doing great—let’s keep it going with the next round of decisions.</p>
+    <p>Once again, you’ll see object(s) and choose the description that fits best. </p>
+    <p>Trust your judgment and respond thoughtfully.</p>
+  `,
+  choices: [' '], // restricts to space bar press
+  post_trial_gap: 500
+};
+
 
 /* * * * * * * * * * * * * * * * * * Open message * * * * * * * * * *  * * * * */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -171,6 +194,8 @@ function getpromptTrials() {
     ActAbs_instruction: ActAbs_instruction,
     PassLearn_continue: PassLearn_continue,
     ActLearn_continue: ActLearn_continue,
+    PostNormlab_instruction: Postlab_norm,
+    PostModlab_instruction: Postlab_mod,
     // welcome and closue
     openning: welcome,
     waiting: waiting,
