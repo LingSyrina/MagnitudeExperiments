@@ -1,6 +1,6 @@
 (function () {
     let logs = []; 
-    
+     
     // Override console.log to capture logs
     const originalLog = console.log;
     console.log = function (...args) {
