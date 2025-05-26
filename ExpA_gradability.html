@@ -91,10 +91,10 @@
     var post_label = 20; // devider of 4
 
     //debug block
-    // var pre_trial = 2;
-    // var learn = 4;
-    // var PassActRatio = [1, 1, 1, 1];
-    // var post_label = 4; // devider of 4
+    var pre_trial = 2;
+    var learn = 4;
+    var PassActRatio = [1, 1, 1, 1];
+    var post_label = 4; // devider of 4
 
     //               Methods                                      Prompts
     //Slider        {SliderMorph, SliderPair, SliderOverlap};     {PreLabelSlider, DegQSlider, EquaSlider, CompSlider};
@@ -149,12 +149,15 @@
     if (labelCond == 'NOM'){
       timeline.push(prompts.PassLabel_instruction, LabInterPass1, prompts.ActLabel_instruction, LabInterActive1,
                     prompts.PassLearn_continue, LabInterPass2, prompts.ActLearn_continue, LabInterActive2); //Intervention block
-      timeline.push(prompts.PostNormlab_instruction, postLabCat); //Post-intervention block
-      timeline.push(prompts.PostModlab_instruction, postIntCat);
     }
     if (labelCond == 'ORD'){
       timeline.push(prompts.PassRel_instruction, RelInterPass1, prompts.ActRel_instruction, RelInterActive2,
                   prompts.PassLearn_continue, RelInterPass2, prompts.ActLearn_continue, RelInterActive2); //Intervention block
+    }
+    if (String(A)[0] == 'l'){
+      timeline.push(prompts.PostNormlab_instruction, postLabCat); //Post-intervention block
+      timeline.push(prompts.PostModlab_instruction, postIntCat);
+    } else {
       timeline.push(prompts.PostNormlab_instruction, postIntCat);
       timeline.push(prompts.PostModlab_instruction, postLabCat); //Post-intervention block
     }
