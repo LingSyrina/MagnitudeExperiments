@@ -149,14 +149,14 @@
     if (labelCond == 'NOM'){
       timeline.push(prompts.PassLabel_instruction, LabInterPass1, prompts.ActLabel_instruction, LabInterActive1,
                     prompts.PassLearn_continue, LabInterPass2, prompts.ActLearn_continue, LabInterActive2); //Intervention block
-      timeline.push(prompts.PostSlider_instruction, postLabCat); //Post-intervention block
-      timeline.push(prompts.PostSlider_instruction, postIntCat);
+      timeline.push(prompts.PostNormlab_instruction, postLabCat); //Post-intervention block
+      timeline.push(prompts.PostModlab_instruction, postIntCat);
     }
     if (labelCond == 'ORD'){
       timeline.push(prompts.PassRel_instruction, RelInterPass1, prompts.ActRel_instruction, RelInterActive2,
                   prompts.PassLearn_continue, RelInterPass2, prompts.ActLearn_continue, RelInterActive2); //Intervention block
-      timeline.push(prompts.PostSlider_instruction, postIntCat);
-      timeline.push(prompts.PostSlider_instruction, postLabCat); //Post-intervention block
+      timeline.push(prompts.PostNormlab_instruction, postIntCat);
+      timeline.push(prompts.PostModlab_instruction, postLabCat); //Post-intervention block
     }
     timeline.push(prompts.waiting, saveTrial);
     timeline.push(prompts.closing);
