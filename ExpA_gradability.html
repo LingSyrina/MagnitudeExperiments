@@ -163,11 +163,15 @@
     }
     timeline.push(prompts.waiting, saveTrial);
     //timeline.push(prompts.closing);
-    const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=731&credit_token=ac13a1489bd94131a49ef0ed33f416e5&survey_code=" + subjectID;
+    //new study url
+    // const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=731&credit_token=ac13a1489bd94131a49ef0ed33f416e5&survey_code=" + subjectID;
+    //old study url
+    const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=731&credit_token=4db329b1cfcd4a6e9e3d3dcd53859d035&survey_code=" + subjectID;
     console.log(sonaRedirectURL);
     timeline.push({
       type: jsPsychHtmlKeyboardResponse,
-      stimulus: "<p>Thank you for participating!</p><p>Press any key to complete the study.</p>",
+      stimulus: `<p>Your credit shall be automatically applied if you <b>press any key to complete</b> the study.</p> 
+                  <p>Alternatively, the researcher will manually apply credit within two working days.</p>`,
       response_ends_trial: true,
       on_finish: function() {
         if (subjectID) {
