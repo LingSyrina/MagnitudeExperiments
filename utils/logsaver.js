@@ -1,6 +1,6 @@
 (function () {
-    let logs = []; // Array to store log messages
-
+    let logs = []; 
+     
     // Override console.log to capture logs
     const originalLog = console.log;
     console.log = function (...args) {
@@ -8,24 +8,22 @@
         originalLog.apply(console, args);
     };
 
-    function downloadStimuliAsCSV() {
+    function downloadStimuliAsCSV(pre_stimuli, norm_learn, comp_learn, cat_stimuli, int_stimuli) {
         try {
-          // Inside the downloadStimuliAsCSV function:
             const flattenStimulusArray = (data) => {// If array of arrays, flatten to array of objects
                 if (Array.isArray(data[0])) {
                     return data.flat(); // Or use .reduce((a,b) => a.concat(b), []) if .flat() is unsupported
                   }
                   return data;
                 };
-
             const stimulusSets = [
-              { label: "Preslider baseline stimuli", data: flattenStimulusArray(window.pre_stimuli) },
-              { label: "Norminal learn", data: flattenStimulusArray(window.norm_learn) },
-              { label: "Ordinal learn", data: flattenStimulusArray(window.comp_learn) },
-              { label: "Predicate test", data: flattenStimulusArray(window.cat_stimuli) },
-              { label: "Modifier test", data: flattenStimulusArray(window.int_stimuli) }
+              { label: "Preslider baseline stimuli", data: flattenStimulusArray(pre_stimuli) },
+              { label: "Norminal learn", data: flattenStimulusArray(norm_learn) },
+              { label: "Ordinal learn", data: flattenStimulusArray(comp_learn) },
+              { label: "Predicate test", data: flattenStimulusArray(cat_stimuli) },
+              { label: "Modifier test", data: flattenStimulusArray(int_stimuli) }
             ];
-
+            
             // Flatten all stimulus objects into one array with type labels
             const allStimuli = [];
 
@@ -60,7 +58,6 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
         } catch (err) {
             console.error("downloadStimuliAsCSV failed:", err);
         }

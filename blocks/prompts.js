@@ -1,16 +1,30 @@
 /* * * * * * * * * * * * * * * * * * Instructions * * * * * * * * * *  * * * * */
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+// var PreSlider_instruction = {
+//   type: jsPsychHtmlKeyboardResponse,
+//   stimulus: `
+//     <p>In this section, you will see a slider. </br>
+//     Each end of the slider will have an item as a reference point. </br>
+//     Your task is to <b>place the pink item</b> along the slider based on the given references.</p>
+//     <p>(Press the space bar to begin.)</p>
+//   `,
+//   choices: [' '], // restricts to space bar press
+//   post_trial_gap: 500
+// };
 var PreSlider_instruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
-    <p>In this section, you will see a slider. </br>
-    Each end of the slider will have an item as a reference point. </br>
-    Your task is to <b>place the pink item</b> along the slider based on the given references.</p>
+    <p>In this section, you will see a slider.</br>
+    Each end of the slider will display a reference item. </br>
+    Your task is to <b>place the pink item</b> along the slider based on those references.</p>
+    <p>You can either <b>click anywhere on the scale</b> where you think the pink item should go,</br>
+    or click first to activate the slider and then drag it to adjust the position. Both methods are fine.</p>
     <p>(Press the space bar to begin.)</p>
   `,
-  choices: [' '], // restricts to space bar press
+  choices: [' '],
   post_trial_gap: 500
 };
+
 
 var PostSlider_instruction = {
   type: jsPsychHtmlKeyboardResponse,
@@ -215,7 +229,7 @@ window.getpromptTrials = getpromptTrials;
 // No variables needed, so keep as constants
 const PreLabelSlider = `
   <p style="margin-Bottom: 2px !important;">Using the scale, in relation to the <i>grey objects on the two ends</i>,</p>
-  <p style="margin-Top: 0px !important;"><b>Where would you place the pink object?</b></p>
+  <p style="margin-Top: 0px !important;"><b>Where would you place the pink object?</b> (Click on the scale to activate the tick.)</p>
 `;
 
 function DegQSlider(stimulus) {
