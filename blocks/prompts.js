@@ -229,7 +229,7 @@ window.getpromptTrials = getpromptTrials;
 // No variables needed, so keep as constants
 const PreLabelSlider = `
   <p style="margin-Bottom: 2px !important;">Using the scale, in relation to the <i>grey objects on the two ends</i>,</p>
-  <p style="margin-Top: 0px !important;"><b>Where would you place the pink object?</b></p>
+  <p style="margin-Top: 0px !important;"><b>Where would you place the pink object?</b> (Click on the scale to activate the tick.)</p>
 `;
 
 function DegQSlider(stimulus) {
