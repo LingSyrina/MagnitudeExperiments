@@ -29,7 +29,7 @@ function drawAll(state) {
     ctx, canvas, CONFIG, blobs, userClicks,
     hoverPos, hoverHighlight, dragIndex, editMode, isPreviewing
   } = state;
-  console.log("Draw called:", blobs.A);
+  // console.log("Draw called:", blobs.A);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);

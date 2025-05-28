@@ -12,13 +12,9 @@ class MorphBlob {
     this.x = cloneArray(x);
     this.y = cloneArray(y);
     this.ctrlX1 = cloneArray(ctrlX);
-    //console.log("ctrlX1 sucess");
     this.ctrlY1 = cloneArray(ctrlY);
-    //console.log("ctrlY1 sucess");
     this.ctrlX2 = new Array(x.length).fill(0);
     this.ctrlY2 = new Array(y.length).fill(0);
-    //console.log(this.x, this.ctrlX1, this.ctrlY2);
-    //this.flipControlPoints();
   }
 
   flipControlPoints() {
@@ -44,7 +40,7 @@ class MorphBlob {
   }
 
   static interpolate(blob1, blob2, ratio) {
-    console.log(blob1, blob2, ratio);
+    // console.log(blob1, blob2, ratio);
     const lerp = (a, b) => a + (b - a) * ratio;
     const x = blob1.x.map((v, i) => lerp(v, blob2.x[i], ratio));
     const y = blob1.y.map((v, i) => lerp(v, blob2.y[i], ratio));

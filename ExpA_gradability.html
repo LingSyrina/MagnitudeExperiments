@@ -5,7 +5,8 @@
     <script src="https://unpkg.com/jspsych@7.3.4" type="text/javascript"></script>
     <script src="https://unpkg.com/@jspsych/plugin-external-html"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-html-button-response"></script> 
+    <script src="https://unpkg.com/@jspsych/plugin-canvas-button-response"></script>
+    <script src="https://unpkg.com/@jspsych/extension-mouse-tracking"></script>
     <script src="external/plugin-canvas-slider-response.js"></script>
     <script src="https://unpkg.com/@jspsych/plugin-canvas-keyboard-response"></script>
     <script src="https://unpkg.com/@jspsych/plugin-preload"></script>
@@ -16,7 +17,7 @@
         /** INITIALIZE jsPsych **/
         var jsPsych = initJsPsych({
             show_progress_bar: true,
-          }); 
+          });
     </script>
     <script src="./utils/blob.js"></script>
     <script src="./utils/draw.js"></script>
@@ -54,6 +55,9 @@
         background-color: #ccc;
         border: 1px solid #aaa;
       }
+      .jspsych-btn {
+        margin: 0.4em;
+      }
     </style>
 
   </head>
@@ -68,11 +72,11 @@
     window.linglabels = Shuffle(['raflen', 'luprit']);
     const [A, B] = linglabels;
     const labelDict = {
-          "[[0, 0.5], [0, 0.1]]": [A, 0],
-          "[[0.5, 1.1], [1, 1.1]]": [B, 1]
+          "[[0, 0.5], [1, 1.1]]": [A, 0],
+          "[[0.5, 1.1], [0, 0.1]]": [B, 1]
     };
     var labelCond = (group === 0) ? 'NOM' : 'ORD';
-    let condition = String(A)[0] + String(B)[0] + labelCond; 
+    let condition = String(A)[0] + String(B)[0] + labelCond;
     // labelCond = 'ORD';
     console.log(subjectID, condition)
     var saveTrial = saveServerData(expID, subjectID, labelCond, condition);
@@ -85,16 +89,16 @@
     // console.log("Cought blobs", blobs);
 
     //Define trial numbers
-    var pre_trial = 20;
-    var learn = 50;
-    var PassActRatio = [5, 20, 5, 20];
-    var post_label = 25; // devider of 4
+    // var pre_trial = 20;
+    // var learn = 50;
+    // var PassActRatio = [5, 20, 5, 20];
+    // var post_label = 25; // devider of 4
 
     // //debug block
-    // var pre_trial = 2;
-    // var learn = 4;
-    // var PassActRatio = [1, 1, 1, 1];
-    // var post_label = 4; // devider of 4
+    var pre_trial = 2;
+    var learn = 4;
+    var PassActRatio = [1, 1, 1, 1];
+    var post_label = 4; // devider of 4
 
     //               Methods                                      Prompts
     //Slider        {SliderMorph, SliderPair, SliderOverlap};     {PreLabelSlider, DegQSlider, EquaSlider, CompSlider};
@@ -124,36 +128,45 @@
 
     // downloadConsoleLogs(pre_stimuli, norm_learn, comp_learn, cat_stimuli, int_stimuli);
 
-    //Get trials
+    //**************************** Get trials ****************************//
     const prompts = getpromptTrials();
+
+    // Slider trials
     const preSlider = GetSlider(prompts, pre_stimuli, 'pre_slider');
 
-    const postLabCat = GetLabel(prompts, cat_stimuli, 'post_label_cat');
-    const postIntCat = GetIntLabel(prompts, int_stimuli, 'post_label_cat');
-
+    // Learning trials: Predication versus Modifier
     const LabInterPass1 = GetLabelPass(prompts, norm_learn[0], 'label_intervention');
-    const LabInterActive1 = GetLabelActive(prompts, norm_learn[1], 'label_intervention_act');
+    const LabInterActive1 = GetLabelActiveButton(prompts, norm_learn[1], 'label_intervention_act');
     const LabInterPass2 = GetLabelPass(prompts, norm_learn[2], 'label_intervention');
-    const LabInterActive2 = GetLabelActive(prompts, norm_learn[3], 'label_intervention_act');
+    const LabInterActive2 = GetLabelActiveButton(prompts, norm_learn[3], 'label_intervention_act');
 
     const RelInterPass1 = GetLabelPass(prompts, comp_learn[0], 'label_intervention');
-    const RelInterActive1 = GetLabelActive(prompts, comp_learn[1], 'label_intervention_act');
+    const RelInterActive1 = GetLabelActiveButton(prompts, comp_learn[1], 'label_intervention_act');
     const RelInterPass2 = GetLabelPass(prompts, comp_learn[2], 'label_intervention');
-    const RelInterActive2 = GetLabelActive(prompts, comp_learn[3], 'label_intervention_act');
+    const RelInterActive2 = GetLabelActiveButton(prompts, comp_learn[3], 'label_intervention_act');
 
-    //Build timeline
+    // Testing trials
+    const postLabCat = GetLabelButton(prompts, cat_stimuli, 'post_label'); //Testing trials: label
+    const postIntCat = GetIntLabelButton(prompts, int_stimuli, 'post_modifierLabel'); //Testing trials: modifier
+
+    //**************************** Build timeline ****************************//
     const timeline = [];
-    timeline.push(prompts.openning);
-    timeline.push(consentTrial);
-    timeline.push(prompts.PreSlider_instruction, preSlider); //Pre-intervention block
+
+    // Openning blocks
+    timeline.push(prompts.openning, consentTrial);
+    timeline.push(prompts.PreSlider_instruction, preSlider);
+
+    // Learning trials
     if (labelCond == 'NOM'){
       timeline.push(prompts.PassLabel_instruction, LabInterPass1, prompts.ActLabel_instruction, LabInterActive1,
-                    prompts.PassLearn_continue, LabInterPass2, prompts.ActLearn_continue, LabInterActive2); //Intervention block
+                    prompts.PassLearn_continue, LabInterPass2, prompts.ActLearn_continue, LabInterActive2);
     }
     if (labelCond == 'ORD'){
       timeline.push(prompts.PassRel_instruction, RelInterPass1, prompts.ActRel_instruction, RelInterActive2,
-                  prompts.PassLearn_continue, RelInterPass2, prompts.ActLearn_continue, RelInterActive2); //Intervention block
+                  prompts.PassLearn_continue, RelInterPass2, prompts.ActLearn_continue, RelInterActive2);
     }
+
+    // Testing trials
     if (String(A)[0] == 'l'){
       timeline.push(prompts.PostNormlab_instruction, postLabCat); //Post-intervention block
       timeline.push(prompts.PostModlab_instruction, postIntCat);
@@ -161,8 +174,11 @@
       timeline.push(prompts.PostNormlab_instruction, postIntCat);
       timeline.push(prompts.PostModlab_instruction, postLabCat); //Post-intervention block
     }
+
+    // Final blocks
     timeline.push(prompts.waiting, saveTrial);
     //timeline.push(prompts.closing);
+
     //new study url
     // const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=923&credit_token=ac13a1489bd94131a49ef0ed33f416e5&survey_code=" + subjectID;
     //old study url
@@ -170,7 +186,7 @@
     console.log(sonaRedirectURL);
     timeline.push({
       type: jsPsychHtmlKeyboardResponse,
-      stimulus: `<p>Your credit shall be automatically applied if you <b>press any key to complete</b> the study.</p> 
+      stimulus: `<p>Your credit shall be automatically applied if you <b>press any key to complete</b> the study.</p>
                   <p>Alternatively, the researcher will manually apply credit within two working days.</p>`,
       response_ends_trial: true,
       on_finish: function() {

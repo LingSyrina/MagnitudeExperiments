@@ -17,8 +17,6 @@ var PreSlider_instruction = {
     <p>In this section, you will see a slider.</br>
     Each end of the slider will display a reference item. </br>
     Your task is to <b>place the pink item</b> along the slider based on those references.</p>
-    <p>You can either <b>click anywhere on the scale</b> where you think the pink item should go,</br>
-    or click first to activate the slider and then drag it to adjust the position. Both methods are fine.</p>
     <p>(Press the space bar to begin.)</p>
   `,
   choices: [' '],
@@ -229,7 +227,8 @@ window.getpromptTrials = getpromptTrials;
 // No variables needed, so keep as constants
 const PreLabelSlider = `
   <p style="margin-Bottom: 2px !important;">Using the scale, in relation to the <i>grey objects on the two ends</i>,</p>
-  <p style="margin-Top: 0px !important;"><b>Where would you place the pink object?</b> (Click on the scale to activate the tick.)</p>
+  <p style="margin-Top: 0px !important;"><b>Where would you place the pink object?</b> </p>
+  <p style="margin-Top: 0px !important;">(Click on the scale to activate the tick.)</p>
 `;
 
 function DegQSlider(stimulus) {
@@ -276,6 +275,7 @@ function AbsLearn(stimulus, labelType) {
     <b><i>${modifier ? modifier + ' ' : ''}${adj}</i></b>.</br>
     (Press the space bar to continue.) </p>
 `;}
+
 function RelLearn(stimulus, labelType) {
   const modifier = (labelType === 'Adv') ? stimulus.adv : stimulus.deg + ' frm(s)';
   const adj = stimulus.adj;
@@ -285,15 +285,16 @@ function RelLearn(stimulus, labelType) {
     (Press the space bar to continue.) </p>
 `;}
 
-// label prompts (active) // change to get correct key
+// label prompts (active)
 function LabLearnAct(stimulus, labelType) {
   const correct = stimulus.key; //assume key is a level (numeric)
   const LevArray = Array.from({ length: linglabels.length }, (_, i) => i);
   const remainingLabels = LevArray.filter(label => label !== correct);
   const randomLabel = remainingLabels[Math.floor(Math.random() * remainingLabels.length)];
   const [Ia, Ib] = Shuffle([randomLabel, correct]);
-  stimulus.key = (Ia === correct) ? 'q': 'p';
+  stimulus.key = (Ia === correct) ? 'p': 'q';
   const [A, B] = [linglabels[Ia], linglabels[Ib]];
+  stimulus.order = [A, B];
   return `
     <p style="margin-Bottom: 2px !important;">The pink object is </br>
     <strong>Q</strong>: <strong>${A}</strong>.&emsp;&emsp; <strong>P</strong>: <strong>${B}</strong>.</p>
@@ -306,8 +307,9 @@ function CompLearnAct(stimulus, labelType) {
   const remainingLabels = LevArray.filter(label => label !== correct);
   const randomLabel = remainingLabels[Math.floor(Math.random() * remainingLabels.length)];
   const [Ia, Ib] = Shuffle([randomLabel, correct]);
-  stimulus.key = (Ia === correct) ? 'q': 'p';
+  stimulus.key = (Ia === correct) ? 'p': 'q';
   const [A, B] = [linglabels[Ia], linglabels[Ib]];
+  stimulus.order = [`${A}er`, `${B}er`];
   return `
     <p style="margin-Bottom: 2px !important;">The pink object is ___ than the grey object.</br>
     <strong>Q</strong>: <strong>${A}er</strong>.&emsp;&emsp; <strong>P</strong>: <strong>${B}er</strong>.</p>
@@ -338,8 +340,9 @@ function IntLab(stimulus, labelType) { //three level for complement adv/MP
   const remainingLabels = LevArray.filter(label => label !== correct);
   const randomLabel = remainingLabels[Math.floor(Math.random() * remainingLabels.length)];
   const [Ia, Ib] = Shuffle([randomLabel, correct]);
-  stimulus.key = (Ia === correct) ? 'q': 'p';
+  stimulus.key = (Ia === correct) ? 'p': 'q';
   const [a, b] = [linglabels[Ia], linglabels[Ib]];
+  stimulus.order = [`${A} ${a}`, `${B} ${a}`,`${C} ${a}`,`${A} ${b}`,`${B} ${b}`,`${C} ${b}`];
   return `
     <p style="margin-Bottom: 2px !important;">The pink object is</br>
     <strong>1</strong>: <strong>${A} ${a}</strong>.&emsp;&emsp; <strong>2</strong>: <strong>${B} ${a}</strong>.&emsp;&emsp; <strong>3</strong>: <strong>${C} ${a}</strong>.</br>
@@ -374,3 +377,5 @@ function getprompts({ stimulus, promptType, labelType }) {
 }
 
 window.getprompts = getprompts;
+window.posprompt = "<p style=font-size:20px;font-weight:bold;>Great job!</p>";
+window.negprompt = "<p style=font-size:20px;font-weight:bold;>Nope, let's try again!</p>";

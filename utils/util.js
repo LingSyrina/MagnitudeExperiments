@@ -164,29 +164,6 @@ function getDegAdv({ d, mode = 'modifier' }){
 //%%%%%%%% stimulus generation %%%%%%%%%//
 // modify to get noise component and controlled.
 // generate n * radius from min to max with step, default degree precision .15
-// function GenerateSingleMorph({ numStimuli = 20, DegPrecision = 0.15, step = 0.05, min = 0, max = 1, labelDict = [] }) { //console.log(labelDict);
-//   let stimuli = Array.from(
-//       { length: Math.ceil((max - min) / step) + 1 }, (_, i) => {
-//       const radius = parseFloat((min + i * step).toFixed(2));
-//       const label = getRandomLabel();
-//       const degAdv = getDegAdv({ d: (min + (i * step)) / DegPrecision, mode: 'complement' }); // Single call
-//       const [adj, key] = getTrueAdj({labelDict, r:radius});
-//       return { radius: radius, adj: adj, deg: degAdv.Deg, adv: degAdv.Adv, key: key, LevKey: degAdv.LevKey, randomlabel: label};
-//     });
-//   if (stimuli.length > numStimuli) {
-//         stimuli = stimuli.sort(() => Math.random() - 0.5).slice(0, numStimuli); // Shuffle the stimuli array and pick the first `numStimuli` elements
-//     }
-//   else {
-//     while (stimuli.length < numStimuli) {
-//         const randomValue = Math.floor(getRandomArbitrary(min / step, max / step)) * step;
-//         const radius = parseFloat(randomValue.toFixed(2));
-//         const label = getRandomLabel();
-//         const degAdv = getDegAdv({ d: randomValue/DegPrecision, mode: 'complement' });
-//         const [adj, key] = getTrueAdj({labelDict, r:radius});
-//         stimuli.push({ radius: radius, adj: adj, deg: degAdv.Deg, adv: degAdv.Adv, key: key, LevKey: degAdv.LevKey, randomlabel: label });
-//     }};
-//   return stimuli;
-// }
 function GenerateSingleMorph({configs = null, numStimuli = 20, min = 0, max = 1,  DegPrecision = 0.15, labelDict = []} = {}) {
     const blocks = configs && Array.isArray(configs)
       ? configs : [{radiusRange: [min, max],randRange:[min, max], numStimuli}];

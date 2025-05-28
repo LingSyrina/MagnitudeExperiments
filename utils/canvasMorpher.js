@@ -24,14 +24,14 @@ class CanvasMorpher {
         this.ctx = c.getContext('2d');
         this.canvas = this.ctx.canvas;
         this.blobs = blobs || {}; // if not passed, will stay empty
-        console.log("called morpher", this.blobs);
+        // console.log("called morpher", this.blobs);
         //this.ready = this.loadBlobJsonFromPath('./design/blobs.json');
     }
 
 
     morphAndDraw({radius = 0, rand = 0, arrangementType = 'dual', FillColor = "#73C6B6"}){
-      console.log("called morphAndDraw", this.blobs);
-      console.log("A is", this.blobs.A);
+      // console.log("called morphAndDraw", this.blobs);
+      // console.log("A is", this.blobs.A);
       if (!this.blobs.A || !this.blobs.B || !this.blobs.C || !this.blobs.D) {
         console.warn("Blobs not loaded yet.");
         return;
@@ -145,7 +145,7 @@ class CanvasMorpher {
       [originalCanvas.width, originalCanvas.height] = [dim_size, dim_size];
       const newCanvas = createAndManipulateCanvases(originalCanvas);
       const canvasMorpher = new CanvasMorpher(newCanvas, this.blobs);
-      console.log("slider morph", canvasMorpher.canvas.width);
+      // console.log("slider morph", canvasMorpher.canvas.width);
       const originalCtx = originalCanvas.getContext('2d');
 
       // Draw the central image (p1)
