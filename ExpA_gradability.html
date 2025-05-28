@@ -90,8 +90,8 @@
 
     //Define trial numbers
     var pre_trial = 20;
-    var learn = 50;
-    var PassActRatio = [5, 20, 5, 20];
+    var learn = 45;
+    var PassActRatio = [7, 15, 8, 15];
     var post_label = 25; // devider of 4
 
     // //debug block
@@ -107,19 +107,19 @@
     const pre_stimuli = BlockAppend({labelDict, configs: slider_config, trialType: 'PreLabelSlider'});
     console.log(`${pre_trial} Preslider baseline stimuli:`, pre_stimuli);
 
-    const norm_config = [{radiusRange:[0,0.3], randRange:[1,1], numStimuli:learn/2},
-                        {radiusRange:[0.7,1], randRange:[0,0], numStimuli:learn/2}]
+    const norm_config = [{radiusRange:[0,0.4], randRange:[1,1], numStimuli:learn/2},
+                        {radiusRange:[0.6,1], randRange:[0,0], numStimuli:learn/2}]
     const norm_learn = BlockAppend({labelDict, configs: norm_config, passActRatio: PassActRatio, trialType: 'LabLearn', labelType: 'Bare'});
     console.log("Norminal learn:", norm_learn);
 
-    const comp_config = [{radiusRange:[0,0.3], randRange:[1,1]},
-                        {radiusRange:[0.7,1], randRange:[0,0]}]
+    const comp_config = [{radiusRange:[0,0.4], randRange:[1,1]},
+                        {radiusRange:[0.6,1], randRange:[0,0]}]
     const comp_learn = BlockAppend({labelDict, configs: comp_config, numStimuli:learn, passActRatio: PassActRatio, trialType:'CompLearn', labelType:labelCond});
     console.log("Ordinal learn:", comp_learn);
 
-    const test_config = [{radiusRange:[0,0.45], randRange:[0,0], numStimuli:post_label/4},
+    const test_config = [{radiusRange:[0,0.49], randRange:[0,0], numStimuli:post_label/4},
                         {radiusRange:[0.5,1], randRange:[1,1], numStimuli:post_label/4},
-                        {radiusRange:[0,0.45], randRange:[1,1], numStimuli:post_label/4},
+                        {radiusRange:[0,0.49], randRange:[1,1], numStimuli:post_label/4},
                         {radiusRange:[0.5,1], randRange:[0,0], numStimuli:post_label/4}]
     const cat_stimuli = BlockAppend({labelDict, configs: test_config, trialType:'NormLab', labelType:'Bare'});
     const int_stimuli = BlockAppend({labelDict, configs: test_config, trialType:'IntLab', labelType:'Bare'});
