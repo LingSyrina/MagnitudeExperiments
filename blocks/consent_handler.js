@@ -39,8 +39,8 @@ function checkConsent(elem) {
 function createConsentTrial() {
     return {
         type: jsPsychExternalHtml,
-        // url: "https://lingsyrina.github.io/MagnitudeExperiments/consent.html", //updated consent html 
-        url: "https://lingsyrina.github.io/consent.html", // old URL
+        // url: "https://lingsyrina.github.io/consent.html", // old URL
+        url: "https://lingsyrina.github.io/MagnitudeExperiments/consent.html", //updated consent html 
         cont_btn: "start",
         check_fn: checkConsent
     };
