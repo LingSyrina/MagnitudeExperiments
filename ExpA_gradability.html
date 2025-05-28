@@ -89,16 +89,16 @@
     // console.log("Cought blobs", blobs);
 
     //Define trial numbers
-    // var pre_trial = 20;
-    // var learn = 50;
-    // var PassActRatio = [5, 20, 5, 20];
-    // var post_label = 25; // devider of 4
+    var pre_trial = 20;
+    var learn = 50;
+    var PassActRatio = [5, 20, 5, 20];
+    var post_label = 25; // devider of 4
 
     // //debug block
-    var pre_trial = 2;
-    var learn = 4;
-    var PassActRatio = [1, 1, 1, 1];
-    var post_label = 4; // devider of 4
+    // var pre_trial = 2;
+    // var learn = 4;
+    // var PassActRatio = [1, 1, 1, 1];
+    // var post_label = 4; // devider of 4
 
     //               Methods                                      Prompts
     //Slider        {SliderMorph, SliderPair, SliderOverlap};     {PreLabelSlider, DegQSlider, EquaSlider, CompSlider};
@@ -107,13 +107,13 @@
     const pre_stimuli = BlockAppend({labelDict, configs: slider_config, trialType: 'PreLabelSlider'});
     console.log(`${pre_trial} Preslider baseline stimuli:`, pre_stimuli);
 
-    const norm_config = [{radiusRange:[0,0.3], randRange:[0,0], numStimuli:learn/2},
-                        {radiusRange:[0.7,1], randRange:[1,1], numStimuli:learn/2}]
+    const norm_config = [{radiusRange:[0,0.3], randRange:[1,1], numStimuli:learn/2},
+                        {radiusRange:[0.7,1], randRange:[0,0], numStimuli:learn/2}]
     const norm_learn = BlockAppend({labelDict, configs: norm_config, passActRatio: PassActRatio, trialType: 'LabLearn', labelType: 'Bare'});
     console.log("Norminal learn:", norm_learn);
 
-    const comp_config = [{radiusRange:[0,0.3], randRange:[0,0]},
-                        {radiusRange:[0.7,1], randRange:[1,1]}]
+    const comp_config = [{radiusRange:[0,0.3], randRange:[1,1]},
+                        {radiusRange:[0.7,1], randRange:[0,0]}]
     const comp_learn = BlockAppend({labelDict, configs: comp_config, numStimuli:learn, passActRatio: PassActRatio, trialType:'CompLearn', labelType:labelCond});
     console.log("Ordinal learn:", comp_learn);
 
@@ -126,7 +126,7 @@
     console.log("Predicate test:", cat_stimuli);
     console.log("Modifier test:", int_stimuli);
 
-    // downloadConsoleLogs(pre_stimuli, norm_learn, comp_learn, cat_stimuli, int_stimuli);
+    downloadConsoleLogs(pre_stimuli, norm_learn, comp_learn, cat_stimuli, int_stimuli);
 
     //**************************** Get trials ****************************//
     const prompts = getpromptTrials();
