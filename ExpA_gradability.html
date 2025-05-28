@@ -17,6 +17,9 @@
         /** INITIALIZE jsPsych **/
         var jsPsych = initJsPsych({
             show_progress_bar: true,
+            extensions: [
+              { type: jsPsychExtensionMouseTracking, params: {minimum_sample_time: 0} }
+            ],
           });
     </script>
     <script src="./utils/blob.js"></script>

@@ -190,11 +190,6 @@ function GetIntLabel(prompts, block_stimuli, task_name) {
 }
 
 // ********** following functions are used with button response with mouse tracking **********//
-const jsPsych = initJsPsych({
-      extensions: [
-        { type: jsPsychExtensionMouseTracking, params: {minimum_sample_time: 0} }
-      ]
-    });
 
 function GetLabelActiveButton(prompts, block_stimuli, task_name) {
   // Dynamically create the trial
