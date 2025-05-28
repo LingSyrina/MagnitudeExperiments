@@ -179,10 +179,11 @@
     timeline.push(prompts.waiting, saveTrial);
     //timeline.push(prompts.closing);
 
-    //new study url
-    // const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=923&credit_token=ac13a1489bd94131a49ef0ed33f416e5&survey_code=" + subjectID;
     //old study url
-    const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=731&credit_token=4db329b1cfcd4a6e9e3d3dcd53859d03&survey_code=" + subjectID;
+    // const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=731&credit_token=4db329b1cfcd4a6e9e3d3dcd53859d03&survey_code=" + subjectID;
+
+    //new study url
+    const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=923&credit_token=ac13a1489bd94131a49ef0ed33f416e5&survey_code=" + subjectID;
     console.log(sonaRedirectURL);
     timeline.push({
       type: jsPsychHtmlKeyboardResponse,
