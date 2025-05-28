@@ -262,13 +262,55 @@ function GetLabelButton(prompts, block_stimuli, task_name) {
   const randomizedStimuli = jsPsych.randomization.shuffle(block_stimuli);
   const createTrial = () => ({
     type: jsPsychCanvasButtonResponse,
+    // stimulus: async function(c) {
+    //   const method = jsPsych.timelineVariable('method');
+    //   const radius = jsPsych.timelineVariable('radius');
+    //   const rand = jsPsych.timelineVariable('rand');
+    //   await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
+    //   return c;
+    // },
     stimulus: async function(c) {
       const method = jsPsych.timelineVariable('method');
       const radius = jsPsych.timelineVariable('radius');
       const rand = jsPsych.timelineVariable('rand');
+
+      // Step 1: Draw the morph directly to the main canvas
       await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
+
+      // Step 2: Create a mask canvas layered over the main one
+      const maskCanvas = document.createElement('canvas');
+      maskCanvas.width = c.width;
+      maskCanvas.height = c.height;
+      maskCanvas.style.position = 'absolute';
+      maskCanvas.style.left = c.offsetLeft + 'px';
+      maskCanvas.style.top = c.offsetTop + 'px';
+      maskCanvas.style.pointerEvents = 'none'; // Allow clicks to go through
+      c.parentElement.appendChild(maskCanvas);
+
+      const maskCtx = maskCanvas.getContext('2d');
+
+      // Fill the mask canvas with light grey
+      maskCtx.fillStyle = '#f5f5f5';
+      maskCtx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
+
+      // Step 3: Unmask via mousemove
+      c.addEventListener('mousemove', function(e) {
+        const rect = maskCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const eraseWidth = 60;
+        const eraseHeight = 60;
+
+        maskCtx.save();
+        maskCtx.globalCompositeOperation = 'destination-out';
+        maskCtx.fillRect(x - eraseWidth / 2, y - eraseHeight / 2, eraseWidth, eraseHeight);
+        maskCtx.restore();
+      });
+
       return c;
     },
+
     on_start: function() {
       const container = jsPsych.getDisplayElement();
       container.innerHTML = ''; // Clear previous content
@@ -276,7 +318,7 @@ function GetLabelButton(prompts, block_stimuli, task_name) {
     on_load: function() { // Move prompt div below canvas, before buttons
       const canvas = document.querySelector('canvas');
       const prompt = document.createElement('div');
-      prompt.innerHTML = `<p><strong>The pink object is:</strong></p>`;
+      prompt.innerHTML = `<p>(Use your cursor to move over the canvas and reveal the object.)</p><p><strong>The pink object is:</strong></p>`;
       prompt.style.textAlign = 'center';
       prompt.style.marginTop = '10px';
       canvas.insertAdjacentElement('afterend', prompt); // Insert the prompt after the canvas
@@ -327,11 +369,52 @@ function GetIntLabelButton(prompts, block_stimuli, task_name) {
   const randomizedStimuli = jsPsych.randomization.shuffle(block_stimuli);
   const createTrial = () => ({
     type: jsPsychCanvasButtonResponse,
+    // stimulus: async function(c) {
+    //   const method = jsPsych.timelineVariable('method');
+    //   const radius = jsPsych.timelineVariable('radius');
+    //   const rand = jsPsych.timelineVariable('rand');
+    //   await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
+    //   return c;
+    // },
     stimulus: async function(c) {
       const method = jsPsych.timelineVariable('method');
       const radius = jsPsych.timelineVariable('radius');
       const rand = jsPsych.timelineVariable('rand');
+
+      // Step 1: Draw the morph directly to the main canvas
       await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
+
+      // Step 2: Create a mask canvas layered over the main one
+      const maskCanvas = document.createElement('canvas');
+      maskCanvas.width = c.width;
+      maskCanvas.height = c.height;
+      maskCanvas.style.position = 'absolute';
+      maskCanvas.style.left = c.offsetLeft + 'px';
+      maskCanvas.style.top = c.offsetTop + 'px';
+      maskCanvas.style.pointerEvents = 'none'; // Allow clicks to go through
+      c.parentElement.appendChild(maskCanvas);
+
+      const maskCtx = maskCanvas.getContext('2d');
+
+      // Fill the mask canvas with light grey
+      maskCtx.fillStyle = '#f5f5f5';
+      maskCtx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
+
+      // Step 3: Unmask via mousemove
+      c.addEventListener('mousemove', function(e) {
+        const rect = maskCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const eraseWidth = 60;
+        const eraseHeight = 60;
+
+        maskCtx.save();
+        maskCtx.globalCompositeOperation = 'destination-out';
+        maskCtx.fillRect(x - eraseWidth / 2, y - eraseHeight / 2, eraseWidth, eraseHeight);
+        maskCtx.restore();
+      });
+
       return c;
     },
     on_start: function() {
@@ -341,7 +424,7 @@ function GetIntLabelButton(prompts, block_stimuli, task_name) {
     on_load: function() {
       const canvas = document.querySelector('canvas');
       const prompt = document.createElement('div');
-      prompt.innerHTML = `<p><strong>The pink object is:</strong></p>`;
+      prompt.innerHTML = `<p>(Use your cursor to move over the canvas and reveal the object.)</p><p><strong>The pink object is:</strong></p>`;
       prompt.style.textAlign = 'center';
       prompt.style.marginTop = '10px';
       canvas.insertAdjacentElement('afterend', prompt);

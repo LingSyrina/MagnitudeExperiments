@@ -74,7 +74,7 @@ class CanvasMorpher {
       return scaledCanvas;
      };
 
-    MorphSingle({canvas = canvas, par = par, rand = rand}) {
+    MorphSingle({canvas = canvas, par = par, rand = rand}, callback) {
       // Create a canvas for original drawing
       const dim_size = 600;
       const originalCanvas = document.createElement('canvas');
@@ -96,10 +96,13 @@ class CanvasMorpher {
           const centralX = (canvas.width-centralImg.width)/2; // Centered horizontally
           const centralY = 0; // Top section of the canvas
           ctx.drawImage(centralImg, centralX, centralY); // Central image
+          if (typeof callback === 'function') {
+            callback();
+          }
       });
     };
 
-    MorphPair({canvas = canvas, par = par, rand = rand}) {
+    MorphPair({canvas = canvas, par = par, rand = rand}, callback) {
       // Create a canvas for original drawing
       const dim_size = 600;
       const originalCanvas = document.createElement('canvas');
@@ -135,6 +138,10 @@ class CanvasMorpher {
           // Draw the images
           ctx.drawImage(cleftImg, cleftX, centralY); // Central image
           ctx.drawImage(crightImg, crightX, centralY); // Central image
+
+          if (typeof callback === 'function') {
+            callback();
+          }
       });
     };
 

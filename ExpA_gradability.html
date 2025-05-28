@@ -89,16 +89,16 @@
     // console.log("Cought blobs", blobs);
 
     //Define trial numbers
-    // var pre_trial = 20;
-    // var learn = 50;
-    // var PassActRatio = [5, 20, 5, 20];
-    // var post_label = 25; // devider of 4
+    var pre_trial = 20;
+    var learn = 45;
+    var PassActRatio = [7, 15, 8, 15];
+    var post_label = 25; // devider of 4
 
     // //debug block
-    var pre_trial = 2;
-    var learn = 4;
-    var PassActRatio = [1, 1, 1, 1];
-    var post_label = 4; // devider of 4
+    // var pre_trial = 2;
+    // var learn = 4;
+    // var PassActRatio = [1, 1, 1, 1];
+    // var post_label = 4; // devider of 4
 
     //               Methods                                      Prompts
     //Slider        {SliderMorph, SliderPair, SliderOverlap};     {PreLabelSlider, DegQSlider, EquaSlider, CompSlider};
@@ -107,19 +107,19 @@
     const pre_stimuli = BlockAppend({labelDict, configs: slider_config, trialType: 'PreLabelSlider'});
     console.log(`${pre_trial} Preslider baseline stimuli:`, pre_stimuli);
 
-    const norm_config = [{radiusRange:[0,0.3], randRange:[0,0], numStimuli:learn/2},
-                        {radiusRange:[0.7,1], randRange:[1,1], numStimuli:learn/2}]
+    const norm_config = [{radiusRange:[0,0.4], randRange:[1,1], numStimuli:learn/2},
+                        {radiusRange:[0.6,1], randRange:[0,0], numStimuli:learn/2}]
     const norm_learn = BlockAppend({labelDict, configs: norm_config, passActRatio: PassActRatio, trialType: 'LabLearn', labelType: 'Bare'});
     console.log("Norminal learn:", norm_learn);
 
-    const comp_config = [{radiusRange:[0,0.3], randRange:[0,0]},
-                        {radiusRange:[0.7,1], randRange:[1,1]}]
+    const comp_config = [{radiusRange:[0,0.4], randRange:[1,1]},
+                        {radiusRange:[0.6,1], randRange:[0,0]}]
     const comp_learn = BlockAppend({labelDict, configs: comp_config, numStimuli:learn, passActRatio: PassActRatio, trialType:'CompLearn', labelType:labelCond});
     console.log("Ordinal learn:", comp_learn);
 
-    const test_config = [{radiusRange:[0,0.45], randRange:[0,0], numStimuli:post_label/4},
+    const test_config = [{radiusRange:[0,0.49], randRange:[0,0], numStimuli:post_label/4},
                         {radiusRange:[0.5,1], randRange:[1,1], numStimuli:post_label/4},
-                        {radiusRange:[0,0.45], randRange:[1,1], numStimuli:post_label/4},
+                        {radiusRange:[0,0.49], randRange:[1,1], numStimuli:post_label/4},
                         {radiusRange:[0.5,1], randRange:[0,0], numStimuli:post_label/4}]
     const cat_stimuli = BlockAppend({labelDict, configs: test_config, trialType:'NormLab', labelType:'Bare'});
     const int_stimuli = BlockAppend({labelDict, configs: test_config, trialType:'IntLab', labelType:'Bare'});
@@ -179,10 +179,11 @@
     timeline.push(prompts.waiting, saveTrial);
     //timeline.push(prompts.closing);
 
-    //new study url
-    // const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=923&credit_token=ac13a1489bd94131a49ef0ed33f416e5&survey_code=" + subjectID;
     //old study url
-    const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=731&credit_token=4db329b1cfcd4a6e9e3d3dcd53859d03&survey_code=" + subjectID;
+    // const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=731&credit_token=4db329b1cfcd4a6e9e3d3dcd53859d03&survey_code=" + subjectID;
+
+    //new study url
+    const sonaRedirectURL = "https://iub-pbs-credit.sona-systems.com/webstudy_credit.aspx?experiment_id=923&credit_token=ac13a1489bd94131a49ef0ed33f416e5&survey_code=" + subjectID;
     console.log(sonaRedirectURL);
     timeline.push({
       type: jsPsychHtmlKeyboardResponse,

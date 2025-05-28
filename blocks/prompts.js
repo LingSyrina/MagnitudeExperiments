@@ -131,9 +131,11 @@ var Postlab_norm = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
     <p>Great job so far! Now let’s move on to some real decisions.</p>
-    <p>In this part, you’ll see object(s) on the screen. </p>
-    <p>Your task is to select the description that best fits what you see. </p>
-    <p>Please respond as accurately and intuitively as possible.</p>
+    <p>In this part, you’ll see <b>objects initially hidden</b> behind a mask.</p>
+    <p><b>Use your cursor</b> to move over the canvas and reveal the objects.</p>
+    <p>Your task is to <b>select the description</b> that best fits what you see.</p>
+    <p>Please <b>explore the entire object carefully</b> before making your choice, </p>
+    <p> and respond as accurately and intuitively as possible.</p>
   `,
   choices: [' '], // restricts to space bar press
   post_trial_gap: 500
@@ -143,7 +145,7 @@ var Postlab_mod = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
     <p>You're doing great—let’s keep it going with the next round of decisions.</p>
-    <p>Once again, you’ll see object(s) and choose the description that fits best. </p>
+    <p>Once again, you’ll see <b>masked objects</b> and choose the description that fits best. </p>
     <p>Trust your judgment and respond thoughtfully.</p>
   `,
   choices: [' '], // restricts to space bar press
