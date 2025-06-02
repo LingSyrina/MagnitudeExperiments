@@ -51,11 +51,12 @@ var ActLabel_instruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
     <p>You will continue to see objects.</p>
-    <p>Your task now is to <b>select the description</b> that best matches the object.</p>
+    <p>Your task is to <b>select the description</b> that best matches the object shown.</p>
+    <p>Sometimes the object will be <b>partially masked</b> — make your best guess to continue.</p>
     <p>You must answer each question correctly to proceed.</p>
     <p>(Press the space bar to continue.)</p>
   `,
-  choices: [' '], // restricts to space bar press
+  choices: [' '],
   post_trial_gap: 500
 };
 
@@ -75,6 +76,7 @@ var ActRel_instruction = {
   stimulus: `
     <p>You will continue to see pairs of objects.</p>
     <p>Your task now is to <b>select the description</b> that best matches the relationship between the objects.</p>
+    <p>Sometimes one object will be <b>partially masked</b> — make your best guess to continue.</p>
     <p>You must answer each question correctly to proceed.</p>
     <p>(Press the space bar to continue.)</p>
   `,
