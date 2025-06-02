@@ -192,7 +192,7 @@ function GetIntLabel(prompts, block_stimuli, task_name) {
 // ********** following functions are used with button response with mouse tracking **********//
 
 function GetLabelActiveButton(prompts, block_stimuli, task_name) {
-  // Dynamically create the trial
+    
   const randomizedStimuli = jsPsych.randomization.shuffle(block_stimuli);
   const createTrial = () => ({
     type: jsPsychCanvasButtonResponse,
@@ -201,6 +201,38 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
       const radius = jsPsych.timelineVariable('radius');
       const rand = jsPsych.timelineVariable('rand');
       await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
+
+      // Step 2: Create a mask canvas layered over the main one
+      const maskCanvas = document.createElement('canvas');
+      maskCanvas.width = c.width;
+      maskCanvas.height = c.height;
+      maskCanvas.style.position = 'absolute';
+      maskCanvas.style.left = c.offsetLeft + 'px';
+      maskCanvas.style.top = c.offsetTop + 'px';
+      maskCanvas.style.pointerEvents = 'none'; // Allow clicks to go through
+      c.parentElement.appendChild(maskCanvas);
+      c.maskvar = null;
+      const maskCtx = maskCanvas.getContext('2d');
+      // Step 3: 65% chance to mask one corner
+      if (Math.random() < 0.65) {
+        const maskWidth = 150;
+        const maskHeight = 130;
+        const x_min = 150, y_min = 10;
+        const x_max = maskCanvas.width - 150, y_max = maskCanvas.height - 50;
+
+        const corners = [
+          { x: x_min, y: y_min, name: 'top-left' }, // top-left
+          { x: x_max - maskWidth, y: y_min, name: 'top-right' }, // top-right
+          { x: x_min, y: y_max - maskHeight, name: 'bottom-left' }, // bottom-left
+          { x: x_max - maskWidth, y: y_max - maskHeight, name: 'bottom-right' } // bottom-right
+        ];
+
+        const chosenCorner = corners[Math.floor(Math.random() * corners.length)];
+        c.maskvar = chosenCorner;
+        maskCtx.fillStyle = '#f5f5f5';
+        maskCtx.fillRect(chosenCorner.x, chosenCorner.y, maskWidth, maskHeight);
+      }
+
       return c;
     },
     on_start: function() {
@@ -233,6 +265,9 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
     },
     on_finish: function(data) { // Score the response as correct or incorrect.
       // console.log(data.response);
+      const canvas = document.querySelector('canvas');
+      data.mask = canvas.maskvar || null;
+      console.log(data.mask);
       data.subjectResponse = data.order[data.response];
       // console.log(data.subjectResponse, data.response, data.key);
       if (["p","q"][data.response] != data.key) {
