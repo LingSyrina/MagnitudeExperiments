@@ -210,7 +210,7 @@ window.getpromptTrials = getpromptTrials;
 
 
 const PreLabelSlider = `
-  <p style="margin-Bottom: 2px !important;">根据<i>两端灰色的图形</i>为参考，</p>
+  <p style="margin-Bottom: 2px !important;">参考<b>两端灰色的图形</b>，</p>
   <p style="margin-Top: 0px !important;"><b>你会把粉色的图形放在滑动条的哪个位置？</b></p>
 `;
 
