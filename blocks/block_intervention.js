@@ -252,7 +252,7 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
     choices: jsPsych.timelineVariable('order'),
     response_ends_trial: true,
     extensions: [
-      {type: jsPsychExtensionMouseTracking, params: {targets: ['#target']}}
+      {type: jsPsychExtensionMouseTracking, params: {targets: ['canvas']}}
     ],
     data: {
       task: task_name,
@@ -358,7 +358,7 @@ function GetLabelButton(prompts, block_stimuli, task_name) {
     choices: jsPsych.timelineVariable('order'),
     response_ends_trial: true,
     extensions: [
-      {type: jsPsychExtensionMouseTracking, params: {targets: ['#target']}}
+      {type: jsPsychExtensionMouseTracking, params: {targets: ['canvas']}}
     ],
     data: {
       task: task_name,
@@ -475,7 +475,7 @@ function GetIntLabelButton(prompts, block_stimuli, task_name) {
     },
     response_ends_trial: true,
     extensions: [
-      {type: jsPsychExtensionMouseTracking, params: {targets: ['#target']}}
+      {type: jsPsychExtensionMouseTracking, params: {targets: ['canvas']}}
     ],
     data: {
       task: task_name,
