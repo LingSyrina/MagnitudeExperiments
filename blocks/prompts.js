@@ -191,7 +191,7 @@ var fixation = {
 var pause = {
  type: jsPsychHtmlKeyboardResponse,
  stimulus: `
-   <p style="font-size:20px;font-weight:bold;"> Look at this pink object! </p>
+   <p style="font-size:20px;font-weight:bold;"> You are about to see a pink object! </p>
    <p>(Press the space bar to continue.)</p>
  `,
  choices: [' '], // restricts to space bar press
