@@ -99,8 +99,8 @@
 
     // //debug block
     // var pre_trial = 2;
-    // var learn = 4;
-    // var PassActRatio = [1, 1, 1, 1];
+    // var learn = 8;
+    // var PassActRatio = [1, 3, 1, 3];
     // var post_label = 4; // devider of 4
 
     //               Methods                                      Prompts
@@ -144,9 +144,9 @@
     const LabInterActive2 = GetLabelActiveButton(prompts, norm_learn[3], 'label_intervention_act');
 
     const RelInterPass1 = GetLabelPass(prompts, comp_learn[0], 'label_intervention');
-    const RelInterActive1 = GetLabelActiveButton(prompts, comp_learn[1], 'label_intervention_act');
+    const RelInterActive1 = GetLabelActiveButtonPair(prompts, comp_learn[1], 'label_intervention_act');
     const RelInterPass2 = GetLabelPass(prompts, comp_learn[2], 'label_intervention');
-    const RelInterActive2 = GetLabelActiveButton(prompts, comp_learn[3], 'label_intervention_act');
+    const RelInterActive2 = GetLabelActiveButtonPair(prompts, comp_learn[3], 'label_intervention_act');
 
     // Testing trials
     const postLabCat = GetLabelButton(prompts, cat_stimuli, 'post_label'); //Testing trials: label

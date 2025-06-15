@@ -6,6 +6,7 @@ var PreSlider_instruction = {
     <p>在本部分中，你将看到一个滑动条。 </br>
     滑动条的两端将各有一个参照物。 </br>
     你的任务是根据<b>参照物</b>将<b>粉色的图形</b>放在滑动条上相应的位置。</p>
+    <p>你将需完成20组此任务。</p>
     <p>(按空格键开始。)</p>
   `,
   choices: [' '],
@@ -171,11 +172,21 @@ var fixation = {
 var pause = {
  type: jsPsychHtmlKeyboardResponse,
  stimulus: `
-   <p style="font-size:20px;font-weight:bold;"> 看这个粉色的图形！</p>
+   <p style="font-size:20px;font-weight:bold;"> 你将看到一个粉色的图形！</p>
    <p>(按空格键继续。)</p>
  `,
  choices: [' ']
 };
+
+var pausePair = {
+ type: jsPsychHtmlKeyboardResponse,
+ stimulus: `
+   <p style="font-size:20px;font-weight:bold;"> 你将看到一对图形！</p>
+   <p>(按空格键继续。)</p>
+ `,
+ choices: [' '], // restricts to space bar press
+};
+
 
 
 function getpromptTrials() {
@@ -199,7 +210,8 @@ function getpromptTrials() {
     closing: closing,
     // fixation
     fixation: fixation,
-    pause: pause
+    pause: pause,
+    pausePair: pausePair
   };
 }
 
@@ -249,7 +261,7 @@ function LabLearn(stimulus, labelType) {
 function CompLearn(stimulus, labelType) {
   const adj = stimulus.adj;
   return `
-    <p style="margin-Bottom: 2px !important;"><b><i>粉色的图形</i></b>比灰色的图形<b><i>更${adj}</i></b>。</br>
+    <p style="margin-Bottom: 2px !important;"><b><i>粉色的图形</i></b>比灰色的图形<b><i>${adj}</i></b>。</br>
     (按空格键继续。)</p>
 `;}
 
@@ -294,7 +306,7 @@ function CompLearnAct(stimulus, labelType) {
   const [Ia, Ib] = Shuffle([randomLabel, correct]);
   stimulus.key = (Ia === correct) ? 'q' : 'p';
   const [A, B] = [linglabels[Ia], linglabels[Ib]];
-  stimulus.order = [`更${A}`, `更${B}`];
+  stimulus.order = [`${A}`, `${B}`];
   return `
     <p style="margin-Bottom: 2px !important;">粉色的图形<b>比灰色的图形___</b>：</br>
     <strong>Q</strong>: <strong>${A}</strong>    <strong>P</strong>: <strong>${B}</strong></p>

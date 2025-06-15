@@ -17,6 +17,7 @@ var PreSlider_instruction = {
     <p>In this section, you will see a slider.</br>
     Each end of the slider will display a reference item. </br>
     Your task is to <b>place the pink item</b> along the slider based on those references.</p>
+    <p>You will complete 20 such trials.</p>
     <p>(Press the space bar to begin.)</p>
   `,
   choices: [' '],
@@ -197,6 +198,15 @@ var pause = {
  choices: [' '], // restricts to space bar press
 };
 
+var pausePair = {
+ type: jsPsychHtmlKeyboardResponse,
+ stimulus: `
+   <p style="font-size:20px;font-weight:bold;"> You are about to see a pair of objects! </p>
+   <p>(Press the space bar to continue.)</p>
+ `,
+ choices: [' '], // restricts to space bar press
+};
+
 function getpromptTrials() {
   return {
     // block instructions
@@ -218,7 +228,8 @@ function getpromptTrials() {
     closing: closing,
     // fixation
     fixation: fixation,
-    pause: pause
+    pause: pause,
+    pausePair: pausePair
   };
 }
 

@@ -13,17 +13,18 @@ const feedback = {
 };
 
 // ********** Loop for each trial **********//
-function createLoopedTrial(stim, createTrial, prompts) {
+function createLoopedTrial(stim, createTrial, prompts, pair=false) {
     return {
         timeline: [
             prompts.fixation,
-            prompts.pause,
+            (pair === true ? prompts.pausePair : prompts.pause),
             { timeline: [createTrial(), feedback],
               timeline_variables: [stim], // Pass individual stimulus as timeline variable
               loop_function: function (data) {
                 return !data.values()[0].correct; // Continue looping if the response was incorrect
             }}],
           }}
+
 
 function GetLabelPass(prompts, block_stimuli, task_name) {
   // Dynamically create the trial
@@ -51,7 +52,7 @@ function GetLabelPass(prompts, block_stimuli, task_name) {
   const pauseAndTrialTimeline = randomizedStimuli.map((stim) => ({
     timeline: [
       prompts.fixation,
-      prompts.pause,
+      (stim.method === 'MorphPair' ? prompts.pausePair : prompts.pause),
       createTrial(),
     ],
     timeline_variables: [stim], // Pass individual stimulus as timeline variable
@@ -93,7 +94,9 @@ function GetLabelActive(prompts, block_stimuli, task_name) {
   });
   // Block configuration
   const pauseAndTrialTimeline = randomizedStimuli.map((stim) =>
-      createLoopedTrial(stim, createTrial, prompts)
+    stim.method === 'MorphPair'
+      ? createLoopedTrial(stim, createTrial, prompts, true)
+      : createLoopedTrial(stim, createTrial, prompts)
   );
 
   return {
@@ -136,7 +139,7 @@ function GetLabel(prompts, block_stimuli, task_name) {
   const pauseAndTrialTimeline = randomizedStimuli.map((stim) => ({
     timeline: [
       prompts.fixation,
-      prompts.pause,
+      (stim.method === 'MorphPair' ? prompts.pausePair : prompts.pause),
       createTrial(),
     ],
     timeline_variables: [stim], // Pass individual stimulus as timeline variable
@@ -181,7 +184,7 @@ function GetIntLabel(prompts, block_stimuli, task_name) {
   const pauseAndTrialTimeline = randomizedStimuli.map((stim) => ({
     timeline: [
       prompts.fixation,
-      prompts.pause,
+      (stim.method === 'MorphPair' ? prompts.pausePair : prompts.pause),
       createTrial(),
     ],
     timeline_variables: [stim], // Pass individual stimulus as timeline variable
@@ -194,7 +197,7 @@ function GetIntLabel(prompts, block_stimuli, task_name) {
 // ********** following functions are used with button response with mouse tracking **********//
 
 function GetLabelActiveButton(prompts, block_stimuli, task_name) {
-  // Dynamically create the trial
+  let trialtype = '';
   const randomizedStimuli = jsPsych.randomization.shuffle(block_stimuli);
   const createTrial = () => ({
     type: jsPsychCanvasButtonResponse,
@@ -216,25 +219,23 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
       c.maskvar = null;
       const maskCtx = maskCanvas.getContext('2d');
       // Step 3: 65% chance to mask one corner
-      if (Math.random() < 0.65) {
-        const maskWidth = 150;
-        const maskHeight = 130;
-        const x_min = 150, y_min = 10;
-        const x_max = maskCanvas.width - 150, y_max = maskCanvas.height - 50;
+      if (Math.abs(Math.sin(parseFloat(radius) * 1000)) % 1 < 0.65) {
+        const maskWidth = 130;
+        const maskHeight = 170;
+        const x_min = 150, x_max = maskCanvas.width - 170;
+        const y_min = 10;
 
         const corners = [
-          { x: x_min, y: y_min, name: 'top-left' }, // top-left
-          { x: x_max - maskWidth, y: y_min, name: 'top-right' }, // top-right
-          { x: x_min, y: y_max - maskHeight, name: 'bottom-left' }, // bottom-left
-          { x: x_max - maskWidth, y: y_max - maskHeight, name: 'bottom-right' } // bottom-right
+          { x: x_min, y: y_min, name: 'left' }, // left
+          { x: x_max - maskWidth, y: y_min, name: 'right' }, // right
         ];
 
-        const chosenCorner = corners[Math.floor(Math.random() * corners.length)];
+        const condition = radius%2 ? 1 : 0;
+        const chosenCorner = corners[condition];
         c.maskvar = chosenCorner;
         maskCtx.fillStyle = '#f5f5f5';
         maskCtx.fillRect(chosenCorner.x, chosenCorner.y, maskWidth, maskHeight);
       }
-
 
       return c;
     },
@@ -269,6 +270,108 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
     on_finish: function(data) { // Score the response as correct or incorrect.
       // console.log(data.response);
       const canvas = document.querySelector('canvas');
+      trialtype = jsPsych.timelineVariable('method');
+      console.log(trialtype);
+      data.mask = canvas.maskvar || null;
+      console.log(data.mask);
+      data.subjectResponse = data.order[data.response];
+      // console.log(data.subjectResponse, data.response, data.key);
+      if (["q","p"][data.response] != data.key) {
+        data.correct = false;
+      } else {
+        data.correct = true;
+      }
+    }
+  });
+  console.log(trialtype);
+  // Block configuration
+  const pauseAndTrialTimeline = randomizedStimuli.map((stim) =>
+    stim.method === 'MorphPair'
+      ? createLoopedTrial(stim, createTrial, prompts, true)
+      : createLoopedTrial(stim, createTrial, prompts)
+  );
+
+  return {
+      timeline: pauseAndTrialTimeline,
+  };
+}
+
+function GetLabelActiveButtonPair(prompts, block_stimuli, task_name) {
+  let trialtype = '';
+  const randomizedStimuli = jsPsych.randomization.shuffle(block_stimuli);
+  const createTrial = () => ({
+    type: jsPsychCanvasButtonResponse,
+    stimulus: async function(c) {
+      const method = jsPsych.timelineVariable('method');
+      const radius = jsPsych.timelineVariable('radius');
+      const rand = jsPsych.timelineVariable('rand');
+      await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
+
+      // Step 2: Create a mask canvas layered over the main one
+      const maskCanvas = document.createElement('canvas');
+      maskCanvas.width = c.width;
+      maskCanvas.height = c.height;
+      maskCanvas.style.position = 'absolute';
+      maskCanvas.style.left = c.offsetLeft + 'px';
+      maskCanvas.style.top = c.offsetTop + 'px';
+      maskCanvas.style.pointerEvents = 'none'; // Allow clicks to go through
+      c.parentElement.appendChild(maskCanvas);
+      c.maskvar = null;
+      const maskCtx = maskCanvas.getContext('2d');
+      // console.log(Math.abs(Math.sin(parseFloat(radius) * 1000)) % 1);
+      // Step 3: 65% chance to mask one corner
+      if (Math.abs(Math.sin(parseFloat(radius) * 1000)) % 1 < 0.65) {
+        const maskWidth = 130;
+        const maskHeight = 170;
+        const x_min = 300, x_max = maskCanvas.width-20;
+        const y_min = 10;
+
+        const corners = [
+          { x: x_min, y: y_min, name: 'left' }, // top-left
+          { x: x_max - maskWidth, y: y_min, name: 'right' } // top-right
+        ];
+
+        const condition = radius%2 ? 1 : 0;
+        const chosenCorner = corners[condition];
+        c.maskvar = chosenCorner;
+        maskCtx.fillStyle = '#f5f5f5';
+        maskCtx.fillRect(chosenCorner.x, chosenCorner.y, maskWidth, maskHeight);
+      }
+
+      return c;
+    },
+    on_start: function() {
+      const container = jsPsych.getDisplayElement();
+      container.innerHTML = ''; // Clear previous content
+    },
+    on_load: function() { // Move prompt div below canvas, before buttons
+      const canvas = document.querySelector('canvas');
+      const prompt = document.createElement('div');
+      prompt.innerHTML = `<p><strong>这个粉色的图形比灰色的图形_______。</strong></p>`;
+      prompt.style.textAlign = 'center';
+      prompt.style.marginTop = '10px';
+      canvas.insertAdjacentElement('afterend', prompt); // Insert the prompt after the canvas
+    },
+    canvas_size: [250,600],
+    prompt: "",
+    choices: jsPsych.timelineVariable('order'),
+    response_ends_trial: true,
+    extensions: [
+      {type: jsPsychExtensionMouseTracking, params: {targets: ['canvas']}}
+    ],
+    data: {
+      task: task_name,
+      radius: () => jsPsych.timelineVariable('radius'),
+      rand: () => jsPsych.timelineVariable('rand'),
+      method: () => jsPsych.timelineVariable('method'),
+      key: () => task_name.includes('label') ? jsPsych.timelineVariable('key') : jsPsych.timelineVariable('LevKey'),//could need modification for exp 2
+      order: () => jsPsych.timelineVariable('order'),
+      truelabel:() => task_name.includes('label') ? jsPsych.timelineVariable('adj') : jsPsych.timelineVariable('LevKey'),//could need modification for exp 2
+    },
+    on_finish: function(data) { // Score the response as correct or incorrect.
+      // console.log(data.response);
+      const canvas = document.querySelector('canvas');
+      trialtype = jsPsych.timelineVariable('method');
       data.mask = canvas.maskvar || null;
       console.log(data.mask);
       data.subjectResponse = data.order[data.response];
@@ -282,7 +385,9 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
   });
   // Block configuration
   const pauseAndTrialTimeline = randomizedStimuli.map((stim) =>
-      createLoopedTrial(stim, createTrial, prompts)
+    stim.method === 'MorphPair'
+      ? createLoopedTrial(stim, createTrial, prompts, true)
+      : createLoopedTrial(stim, createTrial, prompts)
   );
 
   return {
@@ -387,7 +492,7 @@ function GetLabelButton(prompts, block_stimuli, task_name) {
   const pauseAndTrialTimeline = randomizedStimuli.map((stim) => ({
     timeline: [
       prompts.fixation,
-      prompts.pause,
+      (stim.method === 'MorphPair' ? prompts.pausePair : prompts.pause),
       createTrial(),
     ],
     timeline_variables: [stim], // Pass individual stimulus as timeline variable
@@ -503,7 +608,7 @@ function GetIntLabelButton(prompts, block_stimuli, task_name) {
   const pauseAndTrialTimeline = randomizedStimuli.map((stim) => ({
     timeline: [
       prompts.fixation,
-      prompts.pause,
+      (stim.method === 'MorphPair' ? prompts.pausePair : prompts.pause),
       createTrial(),
     ],
     timeline_variables: [stim], // Pass individual stimulus as timeline variable

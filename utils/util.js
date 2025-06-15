@@ -28,7 +28,7 @@ function Morphfunction({canvas, method, ...args}) {
         switch (method) { // methods for intervention blocks
           case 'MorphSingle': //method with one stimulus: for measure acquisition
               canvasMorpher.MorphSingle({canvas, ...args}, () => {
-                // console.log("✅ MorphSingle callback triggered");
+                // console.log("MorphSingle callback triggered");
                 resolve();
               });
               break;
