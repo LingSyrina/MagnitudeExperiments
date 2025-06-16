@@ -229,6 +229,38 @@ function GeneratePairMorphFlex({pairConfigs = [{ radiusRange: [0, 1], randRange:
     return stimuli;
 }
 
+// function for experiment 2
+function GeneratePairMorphFlex2({pairConfigs = [{ radiusRange: [0, 1], randRange: [0, 1]},
+                                                { radiusRange: [0, 1], randRange: [0, 1]}],
+                                                numStimuli = 10, DegPrecision = 0.3, labelDict = {}, equal=false} = {}){
+    if (!Array.isArray(pairConfigs) || pairConfigs.length !== 2) {
+      throw new Error('pairConfigs must be an array with exactly two config objects');
+    }
+    // console.log("List A config:", pairConfigs);
+    pairConfigs[0].numStimuli = numStimuli;
+    pairConfigs[1].numStimuli = numStimuli;
+    const listA = equal ? buildList(pairConfigs[0]) : Shuffle(buildList(pairConfigs[0]));
+    const listB = equal ? buildList(pairConfigs[1]) : Shuffle(buildList(pairConfigs[1]));
+    const numPairs = Math.min(listA.length, listB.length);
+    const stimuli  = [];
+
+    for (let j = 0; j < numPairs; j++) {
+      let p1   = listA[j].radius;
+      let p2   = listB[j].radius;
+      let rnd1 = listA[j].rand;
+      let rnd2 = listB[j].rand;
+      const isP1Less = j < numPairs / 2;      // first half p1 < p2, second half p1 > p2
+      const needSwap = (p1 < p2) !== isP1Less;
+      if (needSwap) {[p1, p2]   = [p2, p1]; [rnd1, rnd2] = [rnd2, rnd1];}
+      const diff   = Math.abs(p2 - p1);
+      const Pos    = p1 < p2;                 // true if final ordering has p1 < p2
+      const [adj, key] = getCompAdj({ Pos });
+      const degAdv = getDegAdv({ d: diff / DegPrecision, mode: 'modifier' });
+      stimuli.push({radius: [p1, p2], rand:[rnd1, rnd2], adj, deg:degAdv.Deg, adv:degAdv.Adv,key,LevKey: degAdv.LevKey, randomlabel:getRandomLabel()});
+    }
+    return stimuli;
+}
+
 // generate n * radius pair from min to max with 0 differences
 function GenerateEquaMorph({ numStimuli = 20, step = 0.05, min = 0, max = 1, labelDict = [] }) {
   let stimuli = Array.from({ length: Math.ceil((max - min) / step) + 1 }, (_, i) => ({ radius: [min + i * step, min + i * step], randomlabel: getRandomLabel()}));
@@ -301,6 +333,66 @@ function BlockAppend({stimuliSet = [],labelDict = {}, configs = [],
     }
     for (const stimulus of stimuli) {
       stimulus.prompt = getprompts({ stimulus, promptType: trialType, labelType });
+      stimulus.method = method;
+      const randomref = Shuffle([linglabels[linglabels.length - 1], linglabels[0]]);
+      stimulus.reflabel = (trialType !== 'PreLabelSlider') ? randomref : [];
+      stimulus.condition = Math.floor(Math.random() * 2); // 0 or 1
+    }
+    stimuliSet.push(...stimuli);
+    return stimuliSet;
+  }
+}
+
+//********** Block append function for experiment 2 ************//
+function BlockAppend2({stimuliSet = [],labelDict = {}, configs = [],
+                  numStimuli = 10,passActRatio = [], trialType = '',labelType = []
+  }) {
+  let stimuli;
+  let method;
+  if (
+    ['AbsLearn','RelLearn'].includes(trialType)) {
+    // if (['AbsLearn'].includes(trialType)) {
+      // stimuli = GeneratePairMorphFlex({ numStimuli, labelDict, pairConfigs:configs });
+      // method = ['MorphPair', 'MorphSingle'];
+    // } else if (['RelLearn'].includes(trialType)) {
+      stimuli = GeneratePairMorphFlex2({ numStimuli, labelDict, pairConfigs:configs });
+      method = ['MorphPair', 'MorphPair'];
+    // }
+    if (Array.isArray(passActRatio) && passActRatio.length > 0) {
+      const grouped_stimuli = SplitStimuli(stimuli, passActRatio);
+      for (let s = 0; s < grouped_stimuli.length; s++) {
+        const currentTrialType = (s % 2 === 0) ? trialType : trialType + 'Act';
+        const baseType = (s % 2 === 0) ? 'CompLearn' : 'CompLearn' + 'Act';
+        for (const stimulus of grouped_stimuli[s]) {
+          stimulus.promptBare = getprompts({ stimulus, promptType: baseType, labelType: labelType[0] });
+          stimulus.promptModified = getprompts({ stimulus, promptType: currentTrialType, labelType: labelType[1] });
+          stimulus.method = method;
+        }
+      }
+      return grouped_stimuli;
+  } else {
+      for (const stimulus of stimuli) {
+        stimulus.promptBare = getprompts({ stimulus, promptType: 'CompLearn', labelType: labelType[0] });
+        stimulus.promptModified = getprompts({ stimulus, promptType: currentTrialType, labelType: labelType[1] });
+        stimulus.method = method;
+      }
+      stimuliSet.push(...stimuli);
+      return stimuliSet;
+    }
+  } else if (
+    ['PreLabelSlider', 'DegQSlider', 'CompSlider', 'EquaSlider'].includes(trialType)){
+    if (trialType === 'PreLabelSlider' || trialType === 'DegQSlider') {
+      stimuli = GenerateSingleMorph({ configs, labelDict });
+      method = (trialType === 'PreLabelSlider') ? 'SliderMorph' : 'MorphSingle';
+    } else if (trialType === 'CompSlider') {
+      stimuli = GeneratePairMorphFlex2({ numStimuli, labelDict, pairConfigs:configs });
+      method = 'MorphPair';
+    } else if (trialType === 'EquaSlider') {
+      stimuli = GeneratePairMorphFlex2({ numStimuli, labelDict, pairConfigs:configs, equal:true });
+      method = 'MorphPair';
+    }
+    for (const stimulus of stimuli) {
+      stimulus.prompt = getprompts({ stimulus, promptType: trialType, labelType: '' });
       stimulus.method = method;
       const randomref = Shuffle([linglabels[linglabels.length - 1], linglabels[0]]);
       stimulus.reflabel = (trialType !== 'PreLabelSlider') ? randomref : [];
