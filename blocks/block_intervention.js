@@ -200,6 +200,7 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
       const method = jsPsych.timelineVariable('method');
       const radius = jsPsych.timelineVariable('radius');
       const rand = jsPsych.timelineVariable('rand');
+      const condition = jsPsych.timelineVariable('condition');
       await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
 
       // Step 2: Create a mask canvas layered over the main one
@@ -225,7 +226,6 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
           { x: x_max - maskWidth, y: y_min, name: 'right' }, // right
         ];
 
-        const condition = radius%2 ? 1 : 0;
         const chosenCorner = corners[condition];
         c.maskvar = chosenCorner;
         maskCtx.fillStyle = '#f5f5f5';
@@ -300,6 +300,7 @@ function GetLabelActiveButtonPair(prompts, block_stimuli, task_name) {
       const method = jsPsych.timelineVariable('method');
       const radius = jsPsych.timelineVariable('radius');
       const rand = jsPsych.timelineVariable('rand');
+      const condition = jsPsych.timelineVariable('condition');
       await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
 
       // Step 2: Create a mask canvas layered over the main one
@@ -315,7 +316,7 @@ function GetLabelActiveButtonPair(prompts, block_stimuli, task_name) {
       const maskCtx = maskCanvas.getContext('2d');
       // console.log(Math.abs(Math.sin(parseFloat(radius) * 1000)) % 1);
       // Step 3: 65% chance to mask one corner
-      if (Math.abs(Math.sin(parseFloat(radius) * 1000)) % 1 < 0.65) {
+      if (Math.abs(Math.sin(parseFloat(radius[0]) * 1000)) % 1 < 0.65) {
         const maskWidth = 130;
         const maskHeight = 170;
         const x_min = 300, x_max = maskCanvas.width-20;
@@ -326,7 +327,6 @@ function GetLabelActiveButtonPair(prompts, block_stimuli, task_name) {
           { x: x_max - maskWidth, y: y_min, name: 'right' } // top-right
         ];
 
-        const condition = radius%2 ? 1 : 0;
         const chosenCorner = corners[condition];
         c.maskvar = chosenCorner;
         maskCtx.fillStyle = '#f5f5f5';
