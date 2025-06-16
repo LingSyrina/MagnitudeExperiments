@@ -274,6 +274,7 @@ function BlockAppend({stimuliSet = [],labelDict = {}, configs = [],
         for (const stimulus of grouped_stimuli[s]) {
           stimulus.prompt = getprompts({ stimulus, promptType: currentTrialType, labelType });
           stimulus.method = method;
+          stimulus.condition = Math.floor(Math.random() * 2); // 0 or 1
         }
       }
       return grouped_stimuli;
@@ -281,6 +282,7 @@ function BlockAppend({stimuliSet = [],labelDict = {}, configs = [],
       for (const stimulus of stimuli) {
         stimulus.prompt = getprompts({ stimulus, promptType: trialType, labelType });
         stimulus.method = method;
+        stimulus.condition = Math.floor(Math.random() * 2); // 0 or 1
       }
       stimuliSet.push(...stimuli);
       return stimuliSet;
