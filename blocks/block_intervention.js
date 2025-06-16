@@ -23,6 +23,25 @@ function createLoopedTrial(stim, createTrial, prompts, pair=false) {
             }}],
           }}
 
+function createLoopedTrialPair(stim, createTrialA, createTrialB, prompts, pair=false) {
+    return {
+        timeline: [
+            prompts.fixation,
+            (pair === true ? prompts.pausePair : prompts.pause),
+            { timeline: [createTrialA(), feedback],
+              timeline_variables: [stim], // Pass individual stimulus as timeline variable
+              loop_function: function (data) {
+                return !data.values()[0].correct; // Continue looping if the response was incorrect
+            }},
+            prompts.fixation,
+            { timeline: [createTrialB(), feedback],
+              timeline_variables: [stim], // Pass individual stimulus as timeline variable
+              loop_function: function (data) {
+                return !data.values()[0].correct; // Continue looping if the response was incorrect
+            }}
+          ],
+          }}
+
 function GetLabelPass(prompts, block_stimuli, task_name) {
   // Dynamically create the trial
   const randomizedStimuli = jsPsych.randomization.shuffle(block_stimuli);
@@ -96,6 +115,133 @@ function GetLabelActive(prompts, block_stimuli, task_name) {
 
   return {
       timeline: pauseAndTrialTimeline,
+  };
+}
+
+function GerCombinedPass(prompts, block_stimuli, task_name){
+  const randomizedStimuli = jsPsych.randomization.shuffle(block_stimuli);
+  const createTrialBare = () => ({
+    type: jsPsychCanvasKeyboardResponse,
+    stimulus: async function(c) {
+      const method = jsPsych.timelineVariable('method')[0];
+      const radius = jsPsych.timelineVariable('radius');
+      const rand = jsPsych.timelineVariable('rand');
+      await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
+      return c;
+    },
+    canvas_size: [250,600],
+    prompt: jsPsych.timelineVariable('promptBare'),
+    response_ends_trial: true,
+    data: {
+      task: task_name,
+      radius: () => jsPsych.timelineVariable('radius'),
+      rand: () => jsPsych.timelineVariable('rand'),
+      method: () => jsPsych.timelineVariable('method')[0]
+    }
+  });
+  const createTrialModified = () => ({
+    type: jsPsychCanvasKeyboardResponse,
+    stimulus: async function(c) {
+      const method = jsPsych.timelineVariable('method')[1];
+      let radius = jsPsych.timelineVariable('radius');
+      let rand = jsPsych.timelineVariable('rand');
+      await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
+      return c;
+    },
+    canvas_size: [250,600],
+    prompt: jsPsych.timelineVariable('promptModified'),
+    response_ends_trial: true,
+    data: {
+      task: task_name,
+      radius: () => jsPsych.timelineVariable('radius'),
+      rand: () => jsPsych.timelineVariable('rand'),
+      method: () => jsPsych.timelineVariable('method')[1]
+    }
+  });
+  //Block configuration
+  const pauseAndTrialTimeline = randomizedStimuli.map((stim) => ({
+    timeline: [
+      prompts.fixation,
+      (stim.method[0] === 'MorphPair' ? prompts.pausePair : prompts.pause),
+      createTrialBare(),
+      prompts.fixation,
+      createTrialModified()
+    ],
+    timeline_variables: [stim], // Pass individual stimulus as timeline variable
+  }));
+  return {
+    timeline: pauseAndTrialTimeline,
+  };
+}
+
+function GerCombinedAct(prompts, block_stimuli, task_name){
+  const randomizedStimuli = jsPsych.randomization.shuffle(block_stimuli);
+  const createTrialBare = () => ({
+    type: jsPsychCanvasKeyboardResponse,
+    stimulus: async function(c) {
+      const method = jsPsych.timelineVariable('method')[0];
+      const radius = jsPsych.timelineVariable('radius');
+      const rand = jsPsych.timelineVariable('rand');
+      const key = jsPsych.timelineVariable('key');
+      // console.log(rand, key);
+      await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
+      return c;
+    },
+    canvas_size: [250,600],
+    prompt: jsPsych.timelineVariable('promptBare'),
+    response_ends_trial: true,
+    data: {
+      task: task_name,
+      radius: () => jsPsych.timelineVariable('radius'),
+      rand: () => jsPsych.timelineVariable('rand'),
+      key: () => jsPsych.timelineVariable('key'),
+      method: () => jsPsych.timelineVariable('method')[0]
+    },
+    on_finish: function(data) { // Score the response as correct or incorrect.
+      // console.log(data.key);
+      if (data.response != data.key) {
+        data.correct = false;
+      } else {
+        data.correct = true;
+      }
+    }
+  });
+  const createTrialModified = () => ({
+    type: jsPsychCanvasKeyboardResponse,
+    stimulus: async function(c) {
+      const method = jsPsych.timelineVariable('method')[1];
+      let radius = jsPsych.timelineVariable('radius');
+      let rand = jsPsych.timelineVariable('rand');
+      await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
+      return c;
+    },
+    canvas_size: [250,600],
+    prompt: jsPsych.timelineVariable('promptModified'),
+    response_ends_trial: true,
+    data: {
+      task: task_name,
+      radius: () => jsPsych.timelineVariable('radius'),
+      rand: () => jsPsych.timelineVariable('rand'),
+      key: () => jsPsych.timelineVariable('LevKey'),
+      method: () => jsPsych.timelineVariable('method')[1]
+    },
+    on_finish: function(data) { // Score the response as correct or incorrect.
+      if (data.response != data.key) {
+        data.correct = false;
+      } else {
+        data.correct = true;
+      }
+    }
+  });
+  //Block configuration
+  const pauseAndTrialTimeline = randomizedStimuli.map((stim) => ({
+    timeline: [
+      createLoopedTrialPair(stim, createTrialBare,createTrialModified, prompts, pair=true),
+    ],
+    timeline_variables: [stim], // Pass individual stimulus as timeline variable
+  }));
+  return {
+    timeline: pauseAndTrialTimeline,
   };
 }
 
