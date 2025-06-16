@@ -249,20 +249,19 @@ const PreLabelSlider = `
 function DegQSlider(stimulus) {
   const randomlabel = stimulus.randomlabel;
   return `
-    <p style="margin-Bottom: 2px !important;">Using the scale to answer, <b>how ${randomlabel} is the pink object?</b></p>
+    <p style="margin-Bottom: 2px !important; font-size: 23px;"><b>How ${randomlabel} was the pink object?</b></p>
 `;}
 function EquaSlider(stimulus) {
   const randomlabel = stimulus.randomlabel;
   return `
-    <p style="margin-Bottom: 2px !important;">The pink object is <b>as <i>${randomlabel}</i> as</b> the grey object,</p>
-    <p style="margin-Bottom: 2px !important;">On the scale, where would you place the pink object?</p>
+    <p style="margin-Bottom: 2px !important; font-size: 23px;">The pink object is <b>as <i>${randomlabel}</i> as</b> the grey object.</p>
 `;}
 function CompSlider(stimulus) {
   const adj = stimulus.adj;
   return `
-    <p style="margin-Bottom: 2px !important;">The pink object is <b><i>${adj}er</i></b> than the grey object,</p>
-    <p style="margin-Bottom: 2px !important;">On the scale, where would you place the pink object?</p>
+    <p style="margin-Bottom: 2px !important; font-size: 23px;">The pink object is <b><i>${adj}er</i></b> than the grey object.</p>
 `;}
+
 const OverSlider = `
   <p style="margin-Bottom: 2px !important;">On the scale, <b> where would you place the pink object?</b></p>
 `;
