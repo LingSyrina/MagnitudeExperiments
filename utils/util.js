@@ -402,7 +402,7 @@ function BlockAppend2({stimuliSet = [],labelDict = {}, configs = [],
     return stimuliSet;
   }
 }
-
+ 
 //******** Incorporate functions globally ********//
 window.Morphfunction = Morphfunction;
 window.Shuffle = Shuffle;
