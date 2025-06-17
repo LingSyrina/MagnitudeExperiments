@@ -88,8 +88,8 @@ var ActRel_instruction = {
 var PassAbs_instruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
-    <p>In this section, you will see an object along with a more detailed description.</p>
-    <p>Observe the object carefully and review the accompanying details.</p>
+    <p>In this section, you will see object(s) along with a description.</p>
+    <p>Observe the object(s) carefully and review the accompanying details.</p>
     <p>(Press the space bar to begin.)</p>
   `,
   choices: [' '], // restricts to space bar press
@@ -99,8 +99,8 @@ var PassAbs_instruction = {
 var ActAbs_instruction = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
-    <p>In this section, you will see an object and an incomplete description.</p>
-    <p>Your task is to carefully observe the object and complete the description.</p>
+    <p>In this section, you will see object(s) and an incomplete description.</p>
+    <p>Your task is to carefully observe the object(s) and complete the description.</p>
     <p>You can only proceed if your response matches with the correct answer.</p>
     <p>(Press the space bar to continue.)</p>
   `,
@@ -340,7 +340,7 @@ function AbsLearnAct(stimulus, labelType) { //three level for complement adv/MP
 function RelLearnAct(stimulus, labelType) { //three level for modifier adv/MP
   const [A, B, C] = (labelType === 'MP') ? ['about 1 frm', 'about 2 frms', 'about 3 frms']:['slightly', 'somewhat', 'much'];
   const adj = stimulus.adj;
-  stimulus.key = stimulus.LevKey;
+  // stimulus.key = stimulus.LevKey;
   return `
     <p style="margin-Bottom: 2px !important;">Compared to the grey object, how much ${adj}er is the pink object?</br>
     <strong>Q</strong>: <strong>${A}</strong>.&emsp;&emsp; <strong>T</strong>: <strong>${B}</strong>.&emsp;&emsp; <strong>P</strong>: <strong>${C}</strong>.</p>
