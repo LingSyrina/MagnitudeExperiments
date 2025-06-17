@@ -166,7 +166,7 @@ function getDegAdv({ d, mode = 'modifier' }){
     Adv = Compadv[Ind] || 'unknown'; // Avoid out-of-bounds error
   }
   const LevKey = ['q', 't', 'p'][Ind];
-  return {Deg: degree, Adv: Adv, LevKey: LevKey};
+  return {Deg: Ind, Adv: Adv, LevKey: LevKey};
 }
 
 //%%%%%%%% stimulus generation %%%%%%%%%//
