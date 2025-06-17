@@ -259,7 +259,7 @@ function GetLabel(prompts, block_stimuli, task_name) {
     },
     canvas_size: [250,600],
     prompt: jsPsych.timelineVariable('prompt'),
-    choices: ['p', 'q'],
+    choices: ['q', 'p'],
     response_ends_trial: true,
     data: {
       task: task_name,
@@ -417,7 +417,7 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
       console.log(data.mask);
       data.subjectResponse = data.order[data.response];
       // console.log(data.subjectResponse, data.response, data.key);
-      if (["p","q"][data.response] != data.key) {
+      if (["q","p"][data.response] != data.key) {
         data.correct = false;
       } else {
         data.correct = true;
@@ -517,7 +517,7 @@ function GetLabelActiveButtonPair(prompts, block_stimuli, task_name) {
       console.log(data.mask);
       data.subjectResponse = data.order[data.response];
       // console.log(data.subjectResponse, data.response, data.key);
-      if (["p","q"][data.response] != data.key) {
+      if (["q","p"][data.response] != data.key) {
         data.correct = false;
       } else {
         data.correct = true;
@@ -622,7 +622,7 @@ function GetLabelButton(prompts, block_stimuli, task_name) {
       // console.log(data.response);
       data.subjectResponse = data.order[data.response];
       // console.log(data.subjectResponse, data.response, data.key);
-      if (["p","q"][data.response] != data.key) {
+      if (["q","p"][data.response] != data.key) {
         data.correct = false;
       } else {
         data.correct = true;
@@ -738,7 +738,7 @@ function GetIntLabelButton(prompts, block_stimuli, task_name) {
     on_finish: function(data) { // Score the response as correct or incorrect.
       data.subjectResponse = data.order[data.response];
       // console.log(data.subjectResponse, data.response, data.key);
-      if (["p","q"][data.response] != data.key) {
+      if (["q","p"][data.response] != data.key) {
         data.correct = false;
       } else {
         data.correct = true;
