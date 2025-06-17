@@ -224,8 +224,7 @@ function GeneratePairMorphFlex({pairConfigs = [{ radiusRange: [0, 1], randRange:
       const diff   = Math.abs(p2 - p1);
       const Pos    = p1 < p2;                 // true if final ordering has p1 < p2
       const [adj, key] = getCompAdj({ Pos });
-      const degAdv = ModType === 'modifier' ? getDegAdv({ d: diff / DegPrecision, mode: ModType }): getDegAdv({ d: p2 / DegPrecision, mode: ModType });
-      console.log(ModType, degAdv);
+      const degAdv = getDegAdv({ d: diff / DegPrecision, mode: 'modifier' });
       stimuli.push({radius: [p1, p2], rand:[rnd1, rnd2], adj, deg:degAdv.Deg, adv:degAdv.Adv,key,LevKey: degAdv.LevKey});
     }
     return stimuli;
@@ -234,7 +233,7 @@ function GeneratePairMorphFlex({pairConfigs = [{ radiusRange: [0, 1], randRange:
 // function for experiment 2
 function GeneratePairMorphFlex2({pairConfigs = [{ radiusRange: [0, 1], randRange: [0, 1]},
                                                 { radiusRange: [0, 1], randRange: [0, 1]}],
-                                                numStimuli = 10, DegPrecision = 0.3, labelDict = {}, equal=false} = {}){
+                                                numStimuli = 10, DegPrecision = 0.3, labelDict = {}, equal=false, ModType='modifier'} = {}){
     if (!Array.isArray(pairConfigs) || pairConfigs.length !== 2) {
       throw new Error('pairConfigs must be an array with exactly two config objects');
     }
@@ -257,7 +256,8 @@ function GeneratePairMorphFlex2({pairConfigs = [{ radiusRange: [0, 1], randRange
       const diff   = Math.abs(p2 - p1);
       const Pos    = p1 < p2;                 // true if final ordering has p1 < p2
       const [adj, key] = getCompAdj({ Pos });
-      const degAdv = getDegAdv({ d: diff / DegPrecision, mode: 'modifier' });
+      const degAdv = ModType === 'modifier' ? getDegAdv({ d: diff / DegPrecision, mode: ModType }): getDegAdv({ d: p2 / DegPrecision, mode: ModType });
+      console.log(ModType, degAdv);
       stimuli.push({radius: [p1, p2], rand:[rnd1, rnd2], adj, deg:degAdv.Deg, adv:degAdv.Adv,key,LevKey: degAdv.LevKey, randomlabel:getRandomLabel()});
     }
     return stimuli;
