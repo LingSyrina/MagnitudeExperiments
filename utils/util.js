@@ -42,6 +42,11 @@ function Morphfunction({canvas, method, ...args}) {
               resolve();
             });
             break;
+          case 'SliderRef': //slider method with morph stimuli pair
+            canvasMorpher.SliderRef({canvas, ...args}, () => {
+              resolve();
+            });
+            break;
           case 'SliderPair': //slider method with morph stimuli pair
             canvasMorpher.SliderPair({canvas, ...args}, () => {
               resolve();
