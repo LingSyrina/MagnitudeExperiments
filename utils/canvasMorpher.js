@@ -198,6 +198,46 @@ class CanvasMorpher {
       });
     };
 
+    SliderRef({canvas = canvas, par = par, r = [0, 1], condition = 0}) {
+      // Create a canvas for original drawing
+      const dim_size = 600;
+      const originalCanvas = document.createElement('canvas');
+      [originalCanvas.width, originalCanvas.height] = [dim_size, dim_size];
+      const newCanvas = createAndManipulateCanvases(originalCanvas);
+      const canvasMorpher = new CanvasMorpher(newCanvas, this.blobs);
+      const originalCtx = originalCanvas.getContext('2d');
+
+      let [r1, r2] = condition !== 0 ? [r[1], r[0]] : r; // use condition to control the reference order
+      // Draw the left reference (p2)
+      originalCanvas.width = originalCanvas.width; //shortcut to clear originalCtx.clearRect(0, 0, originalCanvas.width, originalCanvas.height);
+      canvasMorpher.morphAndDraw({radius:r1, FillColor:'#AFAFAF'});
+      originalCtx.drawImage(newCanvas, 0, 0);
+      const scaledLeftCanvas = this.scaleCanvas(originalCanvas, canvas.width, canvas.height);
+      const leftImgPromise = this.canvasToImage(scaledLeftCanvas);
+
+      // Draw the right reference (p3)
+      originalCanvas.width = originalCanvas.width;
+      canvasMorpher.morphAndDraw({radius:r2, FillColor:'#AFAFAF'});
+      originalCtx.drawImage(newCanvas, 0, 0);
+      const scaledRightCanvas = this.scaleCanvas(originalCanvas, canvas.width, canvas.height);
+      const rightImgPromise = this.canvasToImage(scaledRightCanvas);
+
+      // Combine the images in the new layout
+      const ctx = canvas.getContext('2d');
+      Promise.all([leftImgPromise, rightImgPromise]).then(([leftImg, rightImg]) => {
+          canvas.width = canvas.width;
+          const leftX = 0; // Further left from central image
+          const leftY = canvas.height + 20 - leftImg.height; // Below central image
+
+          const rightX = canvas.width - rightImg.width; // Further right from central image
+          const rightY = canvas.height + 20 - rightImg.height;  // Below central image
+          // Draw the images
+          // ctx.drawImage(centralImg, centralX, centralY); // Central image
+          ctx.drawImage(leftImg, leftX, leftY); // Left image
+          ctx.drawImage(rightImg, rightX, rightY); // Right image
+      });
+    };    
+
     SliderPair({canvas = canvas, par = par, r = [0, 1], condition = 0}) {
       // Create a canvas for original drawing
       const dim_size = 600;
