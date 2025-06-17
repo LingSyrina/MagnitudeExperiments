@@ -306,7 +306,7 @@ function LabLearnAct(stimulus, labelType) {
   const remainingLabels = LevArray.filter(label => label !== correct);
   const randomLabel = remainingLabels[Math.floor(Math.random() * remainingLabels.length)];
   const [Ia, Ib] = Shuffle([randomLabel, correct]);
-  stimulus.key = (Ia === correct) ? 'p': 'q';
+  stimulus.key = (Ia === correct) ? 'q': 'p';
   const [A, B] = [linglabels[Ia], linglabels[Ib]];
   stimulus.order = [A, B];
   return `
@@ -321,7 +321,7 @@ function CompLearnAct(stimulus, labelType) {
   const remainingLabels = LevArray.filter(label => label !== correct);
   const randomLabel = remainingLabels[Math.floor(Math.random() * remainingLabels.length)];
   const [Ia, Ib] = Shuffle([randomLabel, correct]);
-  stimulus.key = (Ia === correct) ? 'p': 'q';
+  stimulus.key = (Ia === correct) ? 'q': 'p';
   const [A, B] = [linglabels[Ia], linglabels[Ib]];
   stimulus.order = [`${A}er`, `${B}er`];
   return `
@@ -354,7 +354,7 @@ function IntLab(stimulus, labelType) { //three level for complement adv/MP
   const remainingLabels = LevArray.filter(label => label !== correct);
   const randomLabel = remainingLabels[Math.floor(Math.random() * remainingLabels.length)];
   const [Ia, Ib] = Shuffle([randomLabel, correct]);
-  stimulus.key = (Ia === correct) ? 'p': 'q';
+  stimulus.key = (Ia === correct) ? 'q': 'p';
   const [a, b] = [linglabels[Ia], linglabels[Ib]];
   stimulus.order = [`${A} ${a}`, `${B} ${a}`,`${C} ${a}`,`${A} ${b}`,`${B} ${b}`,`${C} ${b}`];
   return `
