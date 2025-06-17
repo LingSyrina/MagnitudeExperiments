@@ -158,14 +158,14 @@
     timeline.push(consentTrial);
     timeline.push(prompts.PreSlider_instruction, preSlider); //Pre-intervention block
     if (labelCond == "Ord"){ //comparative + intensifier rel
-      timeline.push(prompts.PassLabel_instruction, CompInterPass1, prompts.ActLabel_instruction, CompInterActive1,
-                    prompts.PassRel_instruction, CompInterPass2, prompts.ActRel_instruction, CompInterActive2);
+      timeline.push(prompts.PassAbs_instruction, CompInterPass1, prompts.ActAbs_instruction, CompInterActive1,
+                    prompts.PassLearn_continue, CompInterPass2, prompts.ActLearn_continue, CompInterActive2);
     } else if (labelCond == "Int"){ //comparative + MP rel
-      timeline.push(prompts.PassLabel_instruction, RelInterPass1, prompts.ActLabel_instruction, RelInterActive1,
-                    prompts.PassRel_instruction, RelInterPass2, prompts.ActRel_instruction, RelInterActive2);
+      timeline.push(prompts.PassAbs_instruction, RelInterPass1, prompts.ActAbs_instruction, RelInterActive1,
+                    prompts.PassLearn_continue, RelInterPass2, prompts.ActLearn_continue, RelInterActive2);
     } else if (labelCond == "Rat"){ //comparative + MP
-      timeline.push(prompts.PassLabel_instruction, AbsInterPass1, prompts.ActLabel_instruction, AbsInterActive1,
-                    prompts.PassRel_instruction, AbsInterPass2, prompts.ActRel_instruction, AbsInterActive2); //Intervention block
+      timeline.push(prompts.PassAbs_instruction, AbsInterPass1, prompts.ActAbs_instruction, AbsInterActive1,
+                    prompts.PassLearn_continue, AbsInterPass2, prompts.ActLearn_continue, AbsInterActive2); //Intervention block
     }
     timeline.push(prompts.PostSlider_instruction, postAbsSlider); //Post-intervention block
     timeline.push(prompts.waiting, saveTrial);
