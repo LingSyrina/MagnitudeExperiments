@@ -148,14 +148,15 @@ function getCompAdj({ Pos }) {
 // mode can be `modifier` (morph pair) or `complement` (single morph)
 // To garantee 3 levels at both mode, d in [0.10, 0.50] modifier, in [0.4, 0.8] in complement
 function getDegAdv({ d, mode = 'modifier' }){
-  const degree = Math.round(d);
+  const degree = Math.floor(d);
   let Adv, Ind;
+  // console.log(degree);
   if (mode === 'modifier'){
-    Ind = degree - 1;
+    Ind = Math.min(2, Math.max(0, Math.round(degree - 1)));
     const Modadv = ['slightly', 'somewhat', 'much'];
     Adv = Modadv[Ind] || 'unknown';
   } else if (mode === 'complement') {
-    Ind = Math.round(degree - 3);
+    Ind = Math.min(2, Math.max(0, Math.round(degree - 1)));
     const Compadv = ['slightly', 'somewhat', 'very'];
     Adv = Compadv[Ind] || 'unknown'; // Avoid out-of-bounds error
   }
@@ -200,7 +201,7 @@ function GeneratePairMorph({ numStimuli = 10, DegPrecision = 0.15, step = 0.05, 
 // generate n * radius pair from two defined subspace
 function GeneratePairMorphFlex({pairConfigs = [{ radiusRange: [0, 1], randRange: [0, 1]},
                                                 { radiusRange: [0, 1], randRange: [0, 1]}],
-                                                numStimuli = 10, DegPrecision = 0.15, labelDict = {}} = {}){
+                                                numStimuli = 10, DegPrecision = 0.15, labelDict = {}, ModType='modifier'} = {}){
     if (!Array.isArray(pairConfigs) || pairConfigs.length !== 2) {
       throw new Error('pairConfigs must be an array with exactly two config objects');
     }
@@ -223,7 +224,8 @@ function GeneratePairMorphFlex({pairConfigs = [{ radiusRange: [0, 1], randRange:
       const diff   = Math.abs(p2 - p1);
       const Pos    = p1 < p2;                 // true if final ordering has p1 < p2
       const [adj, key] = getCompAdj({ Pos });
-      const degAdv = getDegAdv({ d: diff / DegPrecision, mode: 'modifier' });
+      const degAdv = ModType === 'modifier' ? getDegAdv({ d: diff / DegPrecision, mode: ModType }): getDegAdv({ d: p2 / DegPrecision, mode: ModType });
+      console.log(ModType, degAdv);
       stimuli.push({radius: [p1, p2], rand:[rnd1, rnd2], adj, deg:degAdv.Deg, adv:degAdv.Adv,key,LevKey: degAdv.LevKey});
     }
     return stimuli;
@@ -351,13 +353,13 @@ function BlockAppend2({stimuliSet = [],labelDict = {}, configs = [],
   let method;
   if (
     ['AbsLearn','RelLearn'].includes(trialType)) {
-    // if (['AbsLearn'].includes(trialType)) {
-      // stimuli = GeneratePairMorphFlex({ numStimuli, labelDict, pairConfigs:configs });
-      // method = ['MorphPair', 'MorphSingle'];
-    // } else if (['RelLearn'].includes(trialType)) {
-      stimuli = GeneratePairMorphFlex2({ numStimuli, labelDict, pairConfigs:configs });
-      method = ['MorphPair', 'MorphPair'];
-    // }
+     if (['AbsLearn'].includes(trialType)) {
+        stimuli = GeneratePairMorphFlex2({ numStimuli, labelDict, pairConfigs:configs, ModType:'complement' });
+        method = ['MorphPair', 'MorphPair'];
+      } else if (['RelLearn'].includes(trialType)) {
+        stimuli = GeneratePairMorphFlex2({ numStimuli, labelDict, pairConfigs:configs });
+        method = ['MorphPair', 'MorphPair'];
+      }
     if (Array.isArray(passActRatio) && passActRatio.length > 0) {
       const grouped_stimuli = SplitStimuli(stimuli, passActRatio);
       for (let s = 0; s < grouped_stimuli.length; s++) {
