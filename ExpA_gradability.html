@@ -66,9 +66,21 @@
   </head>
   <body>
   <script type="module">
+    //Logic for testing mode triggered by URL
+    const URLparams = new URLSearchParams(window.location.search);
+    const __IS_TEST = URLparams.get('test') === '1';
+    const __IS_PRINT = URLparams.get('print') === '1';
     //set global random before random seed to garantee it's non-deterministic
     // global random variables including: linguistic label assignment, By-group condition
-    const group = [0,1][Math.floor(Math.random() * 2)]; // get group_name;
+    // const group = [0,1][Math.floor(Math.random() * 2)]; // get group_name;
+    let groupParam = URLparams.get('group');
+    let group;
+    if (groupParam === '0' || groupParam === '1') {// Validate: only accept "0" or "1"
+      group = parseInt(groupParam, 10);
+    } else { // Safe random fallback (0 or 1)
+      group = Math.floor(Math.random() * 2);
+    }
+    console.log("Assigned group:", group);
     var subjectID = setupSubjectID(jsPsych);
     var consentTrial = createConsentTrial();
     const expID = "jUqyaCUPaMCr"; //register an new experiment via OSF
@@ -98,6 +110,16 @@
     var post_label = 25; // devider of 4
 
     // //debug block
+    if (__IS_TEST) {
+      try {
+        pre_trial = 2;
+        learn = 8;
+        PassActRatio = [1, 3, 1, 3];
+        post_label = 4;
+      } catch (e) {
+        console.warn('[TEST] Could not override counts:', e);
+      }
+    }
     // var pre_trial = 2;
     // var learn = 8;
     // var PassActRatio = [1, 3, 1, 3];
@@ -130,6 +152,14 @@
     console.log("Modifier test:", int_stimuli);
 
     // downloadConsoleLogs(pre_stimuli, norm_learn, comp_learn, cat_stimuli, int_stimuli);
+    if (__IS_PRINT) {
+      try {
+        // Your function name & args from your comment:
+        downloadConsoleLogs(pre_stimuli, norm_learn, comp_learn, cat_stimuli, int_stimuli);
+      } catch (e) {
+        console.warn('[TEST] downloadConsoleLogs failed:', e);
+      }
+    }
 
     //**************************** Get trials ****************************//
     const prompts = getpromptTrials();

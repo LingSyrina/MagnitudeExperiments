@@ -205,6 +205,7 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
       const method = jsPsych.timelineVariable('method');
       const radius = jsPsych.timelineVariable('radius');
       const rand = jsPsych.timelineVariable('rand');
+      const condition = jsPsych.timelineVariable('condition');
       await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
 
       // Step 2: Create a mask canvas layered over the main one
@@ -230,7 +231,7 @@ function GetLabelActiveButton(prompts, block_stimuli, task_name) {
           { x: x_max - maskWidth, y: y_min, name: 'right' }, // right
         ];
 
-        const condition = radius%2 ? 1 : 0;
+        // const condition = radius%2 ? 1 : 0;
         const chosenCorner = corners[condition];
         c.maskvar = chosenCorner;
         maskCtx.fillStyle = '#f5f5f5';
@@ -305,6 +306,7 @@ function GetLabelActiveButtonPair(prompts, block_stimuli, task_name) {
       const method = jsPsych.timelineVariable('method');
       const radius = jsPsych.timelineVariable('radius');
       const rand = jsPsych.timelineVariable('rand');
+      const condition = jsPsych.timelineVariable('condition');
       await Morphfunction({ canvas: c, par: radius, rand: rand, method: method });
 
       // Step 2: Create a mask canvas layered over the main one
@@ -331,7 +333,7 @@ function GetLabelActiveButtonPair(prompts, block_stimuli, task_name) {
           { x: x_max - maskWidth, y: y_min, name: 'right' } // top-right
         ];
 
-        const condition = radius%2 ? 1 : 0;
+        // const condition = radius%2 ? 1 : 0;
         const chosenCorner = corners[condition];
         c.maskvar = chosenCorner;
         maskCtx.fillStyle = '#f5f5f5';
