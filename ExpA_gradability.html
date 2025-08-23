@@ -69,9 +69,18 @@
     //Logic for testing mode triggered by URL
     const URLparams = new URLSearchParams(window.location.search);
     const __IS_TEST = URLparams.get('test') === '1';
+    const __IS_PRINT = URLparams.get('print') === '1';
     //set global random before random seed to garantee it's non-deterministic
     // global random variables including: linguistic label assignment, By-group condition
-    const group = [0,1][Math.floor(Math.random() * 2)]; // get group_name;
+    // const group = [0,1][Math.floor(Math.random() * 2)]; // get group_name;
+    let groupParam = URLparams.get('group');
+    let group;
+    if (groupParam === '0' || groupParam === '1') {// Validate: only accept "0" or "1"
+      group = parseInt(groupParam, 10);
+    } else { // Safe random fallback (0 or 1)
+      group = Math.floor(Math.random() * 2);
+    }
+    console.log("Assigned group:", group);
     var subjectID = setupSubjectID(jsPsych);
     var consentTrial = createConsentTrial();
     const expID = "jUqyaCUPaMCr"; //register an new experiment via OSF
@@ -143,7 +152,7 @@
     console.log("Modifier test:", int_stimuli);
 
     // downloadConsoleLogs(pre_stimuli, norm_learn, comp_learn, cat_stimuli, int_stimuli);
-    if (__IS_TEST) {
+    if (__IS_PRINT) {
       try {
         // Your function name & args from your comment:
         downloadConsoleLogs(pre_stimuli, norm_learn, comp_learn, cat_stimuli, int_stimuli);
